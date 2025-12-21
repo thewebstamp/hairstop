@@ -115,7 +115,7 @@ export async function GET(
 // PATCH: Update order status
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify admin access
@@ -131,7 +131,7 @@ export async function PATCH(
     }
 
     // Extract order ID from context
-    const { id } = context.params;
+    const { id } = await params; 
     const orderId = parseInt(id);
 
     if (isNaN(orderId)) {

@@ -4,10 +4,11 @@ import { markReviewHelpful } from '@/lib/data';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const reviewId = parseInt(params.id);
+    const { id } = await params
+    const reviewId = parseInt(id);
 
     if (isNaN(reviewId)) {
       return NextResponse.json(

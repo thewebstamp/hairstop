@@ -1,6 +1,5 @@
 // lib/email.ts
 import nodemailer from "nodemailer";
-import { getPublicSettings } from "./settings";
 
 // Create transporter
 const transporter = nodemailer.createTransport({

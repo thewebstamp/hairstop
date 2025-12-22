@@ -1,12 +1,12 @@
 // app/(public)/auth/verify-email/page.tsx - STYLED VERSION
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   
@@ -146,5 +146,28 @@ export default function VerifyEmailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-linear-to-br from-[#faf9f6] via-[#f7e7ce] to-[#f5c8c8] flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative">
+            <div className="w-24 h-24 mx-auto mb-6">
+              <div className="animate-spin rounded-full h-24 w-24 border-t-3 border-b-3 border-[#800020]"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-3xl">📧</span>
+              </div>
+            </div>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-3">Loading...</h3>
+          <p className="text-gray-600">Preparing verification...</p>
+        </div>
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

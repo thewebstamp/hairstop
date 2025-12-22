@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 //app/api/chat/free/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -79,7 +78,7 @@ function getEnhancedBusinessResponse(userMessage: string): string {
     
     // Contact
     if (lowerMessage.includes('contact') || lowerMessage.includes('whatsapp') || lowerMessage.includes('call') || lowerMessage.includes('email')) {
-        return "**Contact Hair Stop** 📞\n\n**Phone/WhatsApp:** +234-812-345-6789\n**Email:** info@hairstop.com\n**Instagram:** @hairstop_ng\n**Address:** Lagos, Nigeria\n\n**Business Hours:**\nMonday - Saturday: 9:00 AM - 6:00 PM\nSunday: 12:00 PM - 4:00 PM\n\n**For Urgent Inquiries:**\nCall or WhatsApp for immediate response!";
+        return "**Contact Hair Stop** 📞\n\n**Phone/WhatsApp:** +234-812-345-6789\n\n**\nCall or WhatsApp for immediate response!";
     }
     
     // Returns/Exchange

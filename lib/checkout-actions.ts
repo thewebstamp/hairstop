@@ -1,10 +1,10 @@
 //lib/checkout-actions
-'use server';
+"use server";
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import pool from '@/lib/db';
-import { revalidatePath } from 'next/cache';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import pool from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export interface ShippingAddress {
   fullName: string;
@@ -50,31 +50,33 @@ export interface OrderItem {
 // Generate unique order number
 function generateOrderNumber(): string {
   const timestamp = Date.now().toString();
-  const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+  const random = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0");
   return `HS${timestamp.slice(-8)}${random}`;
 }
 
 // Create new order
 export async function createOrder(orderData: OrderData) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session?.user?.id) {
-    return { 
-      success: false, 
-      error: 'You must be logged in to place an order',
-      requiresLogin: true 
+    return {
+      success: false,
+      error: "You must be logged in to place an order",
+      requiresLogin: true,
     };
   }
 
   const userId = parseInt(session.user.id);
   const client = await pool.connect();
-  
+
   try {
-    await client.query('BEGIN');
-    
+    await client.query("BEGIN");
+
     // Generate order number
     const orderNumber = generateOrderNumber();
-    
+
     // Create order
     const orderResult = await client.query(
       `INSERT INTO orders (
@@ -90,13 +92,13 @@ export async function createOrder(orderData: OrderData) {
         orderData.shippingFee,
         JSON.stringify(orderData.shippingAddress),
         JSON.stringify(orderData.billingAddress),
-        'bank_transfer',
-        orderData.notes || null
+        "bank_transfer",
+        orderData.notes || null,
       ]
     );
-    
+
     const orderId = orderResult.rows[0].id;
-    
+
     // Get cart items
     const cartItems = await client.query(
       `SELECT ci.*, p.price as base_price, COALESCE(v.price, p.price) as final_price
@@ -106,7 +108,7 @@ export async function createOrder(orderData: OrderData) {
        WHERE ci.user_id = $1`,
       [userId]
     );
-    
+
     // Create order items
     for (const item of cartItems.rows) {
       await client.query(
@@ -121,30 +123,30 @@ export async function createOrder(orderData: OrderData) {
           item.quantity,
           item.final_price,
           item.selected_length || null,
-          item.selected_color || null
+          item.selected_color || null,
         ]
       );
     }
-    
+
     // Clear cart after order creation
-    await client.query('DELETE FROM cart_items WHERE user_id = $1', [userId]);
-    
-    await client.query('COMMIT');
-    
-    revalidatePath('/orders');
-    
+    await client.query("DELETE FROM cart_items WHERE user_id = $1", [userId]);
+
+    await client.query("COMMIT");
+
+    revalidatePath("/orders");
+
     return {
       success: true,
       orderId,
       orderNumber,
-      message: 'Order created successfully'
+      message: "Order created successfully",
     };
   } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('Error creating order:', error);
+    await client.query("ROLLBACK");
+    console.error("Error creating order:", error);
     return {
       success: false,
-      error: 'Failed to create order. Please try again.'
+      error: "Failed to create order. Please try again.",
     };
   } finally {
     client.release();
@@ -154,31 +156,31 @@ export async function createOrder(orderData: OrderData) {
 // Upload proof of payment
 export async function uploadProofOfPayment(orderId: number, fileUrl: string) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session?.user?.id) {
-    return { 
-      success: false, 
-      error: 'You must be logged in to upload proof'
+    return {
+      success: false,
+      error: "You must be logged in to upload proof",
     };
   }
 
   const userId = parseInt(session.user.id);
   const client = await pool.connect();
-  
+
   try {
     // Verify order belongs to user
     const verifyResult = await client.query(
-      'SELECT id FROM orders WHERE id = $1 AND user_id = $2',
+      "SELECT id FROM orders WHERE id = $1 AND user_id = $2",
       [orderId, userId]
     );
-    
+
     if (verifyResult.rows.length === 0) {
-      return { 
-        success: false, 
-        error: 'Order not found or does not belong to user'
+      return {
+        success: false,
+        error: "Order not found or does not belong to user",
       };
     }
-    
+
     // Update order with proof of payment
     await client.query(
       `UPDATE orders 
@@ -186,19 +188,19 @@ export async function uploadProofOfPayment(orderId: number, fileUrl: string) {
        WHERE id = $2 AND user_id = $3`,
       [fileUrl, orderId, userId]
     );
-    
-    revalidatePath('/orders');
+
+    revalidatePath("/orders");
     revalidatePath(`/orders/${orderId}`);
-    
+
     return {
       success: true,
-      message: 'Proof of payment uploaded successfully'
+      message: "Proof of payment uploaded successfully",
     };
   } catch (error) {
-    console.error('Error uploading proof of payment:', error);
+    console.error("Error uploading proof of payment:", error);
     return {
       success: false,
-      error: 'Failed to upload proof of payment'
+      error: "Failed to upload proof of payment",
     };
   } finally {
     client.release();
@@ -208,14 +210,14 @@ export async function uploadProofOfPayment(orderId: number, fileUrl: string) {
 // Get user orders
 export async function getUserOrders() {
   const session = await getServerSession(authOptions);
-  
+
   if (!session?.user?.id) {
     return [];
   }
 
   const userId = parseInt(session.user.id);
   const client = await pool.connect();
-  
+
   try {
     const result = await client.query(
       `SELECT o.*, 
@@ -225,15 +227,17 @@ export async function getUserOrders() {
        ORDER BY o.created_at DESC`,
       [userId]
     );
-    
-    return result.rows.map(order => ({
+
+    return result.rows.map((order) => ({
       ...order,
-      shipping_address: typeof order.shipping_address === 'string' 
-        ? JSON.parse(order.shipping_address)
-        : order.shipping_address,
-      billing_address: typeof order.billing_address === 'string'
-        ? JSON.parse(order.billing_address)
-        : order.billing_address
+      shipping_address:
+        typeof order.shipping_address === "string"
+          ? JSON.parse(order.shipping_address)
+          : order.shipping_address,
+      billing_address:
+        typeof order.billing_address === "string"
+          ? JSON.parse(order.billing_address)
+          : order.billing_address,
     }));
   } finally {
     client.release();
@@ -243,14 +247,14 @@ export async function getUserOrders() {
 // Get order details
 export async function getOrderDetails(orderId: number) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session?.user?.id) {
     return null;
   }
 
   const userId = parseInt(session.user.id);
   const client = await pool.connect();
-  
+
   try {
     // Get order
     const orderResult = await client.query(
@@ -258,13 +262,13 @@ export async function getOrderDetails(orderId: number) {
        WHERE o.id = $1 AND o.user_id = $2`,
       [orderId, userId]
     );
-    
+
     if (orderResult.rows.length === 0) {
       return null;
     }
-    
+
     const order = orderResult.rows[0];
-    
+
     // Get order items with product details
     const itemsResult = await client.query(
       `SELECT oi.*, p.name, p.slug, p.images[1] as image
@@ -274,16 +278,18 @@ export async function getOrderDetails(orderId: number) {
        ORDER BY oi.created_at`,
       [orderId]
     );
-    
+
     return {
       ...order,
-      shipping_address: typeof order.shipping_address === 'string'
-        ? JSON.parse(order.shipping_address)
-        : order.shipping_address,
-      billing_address: typeof order.billing_address === 'string'
-        ? JSON.parse(order.billing_address)
-        : order.billing_address,
-      items: itemsResult.rows
+      shipping_address:
+        typeof order.shipping_address === "string"
+          ? JSON.parse(order.shipping_address)
+          : order.shipping_address,
+      billing_address:
+        typeof order.billing_address === "string"
+          ? JSON.parse(order.billing_address)
+          : order.billing_address,
+      items: itemsResult.rows,
     };
   } finally {
     client.release();

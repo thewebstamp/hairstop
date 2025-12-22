@@ -71,11 +71,11 @@ export default function OrdersPage() {
 
   // Separate orders into pending and completed
   const completedOrders = orders.filter(order =>
-    order.status === 'delivered' || order.status === 'shipped'
+    order.status === 'delivered'
   );
 
   const pendingOrders = orders.filter(order =>
-    order.status !== 'delivered' && order.status !== 'shipped'
+    order.status !== 'delivered'
   );
 
   return (

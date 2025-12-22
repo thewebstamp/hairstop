@@ -116,11 +116,11 @@ export default function AccountPage() {
   };
 
   const completedOrders = orders.filter(order =>
-    order.status === 'delivered' || order.status === 'shipped'
+    order.status === 'delivered'
   );
 
   const pendingOrders = orders.filter(order =>
-    order.status !== 'delivered' && order.status !== 'shipped'
+    order.status !== 'delivered'
   );
 
   return (
@@ -401,7 +401,7 @@ export default function AccountPage() {
                   className="group bg-linear-to-br from-white to-[#faf9f6] rounded-2xl border border-[#f5c8c8] shadow-sm p-8 hover:shadow-xl hover:border-[#800020]/30 hover:scale-[1.02] transition-all duration-500"
                 >
                   <div className="flex flex-col items-center text-center">
-                    <div className="w-20 h-20 bg-linear-to-r from-[#f5c8c8] to-[#f7e7ce] text-[#800020] rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-gradient-to-r group-hover:from-[#800020] group-hover:to-[#a00030] group-hover:text-white transition-all duration-500">
+                    <div className="w-20 h-20 bg-linear-to-r from-[#f5c8c8] to-[#f7e7ce] text-[#800020] rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-linear-to-r group-hover:from-[#800020] group-hover:to-[#a00030] group-hover:text-white transition-all duration-500">
                       🛍️
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#800020] transition-colors">Continue Shopping</h3>
@@ -417,7 +417,7 @@ export default function AccountPage() {
                   className="group bg-linear-to-br from-white to-[#faf9f6] rounded-2xl border border-[#f5c8c8] shadow-sm p-8 hover:shadow-xl hover:border-[#800020]/30 hover:scale-[1.02] transition-all duration-500"
                 >
                   <div className="flex flex-col items-center text-center">
-                    <div className="w-20 h-20 bg-linear-to-r from-[#f5c8c8] to-[#f7e7ce] text-[#800020] rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-gradient-to-r group-hover:from-[#800020] group-hover:to-[#a00030] group-hover:text-white transition-all duration-500">
+                    <div className="w-20 h-20 bg-linear-to-r from-[#f5c8c8] to-[#f7e7ce] text-[#800020] rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-linear-to-r group-hover:from-[#800020] group-hover:to-[#a00030] group-hover:text-white transition-all duration-500">
                       🛒
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#800020] transition-colors">Shopping Cart</h3>

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
         // Check if Ollama is running first
         let ollamaRunning = false;
         try {
-            const testResponse = await fetch('http://localhost:11434/api/tags', {
+            const testResponse = await fetch('http://127.0.0.1:11434/api/tags', {
                 method: 'GET',
                 signal: AbortSignal.timeout(3000) // 3 second timeout
             });
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-        const ollamaResponse = await fetch('http://localhost:11434/api/chat', {
+        const ollamaResponse = await fetch('http://127.0.0.1:11434/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint to check Ollama status
 export async function GET() {
     try {
-        const response = await fetch('http://localhost:11434/api/tags', {
+        const response = await fetch('http://127.0.0.1:11434/api/tags', {
             method: 'GET',
             signal: AbortSignal.timeout(3000)
         });

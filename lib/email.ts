@@ -21,9 +21,8 @@ export async function sendWelcomeEmail({
   name: string;
   verificationToken: string;
 }) {
-  const settings = await getPublicSettings();
-  const storeName = settings.store?.store_name || "Hair Stop";
-  const storeEmail = settings.store?.store_email || "noreply@hairstop.ng";
+  const storeName = "Hair Stop";
+  const storeEmail = "noreply@hairstop.ng";
 
   const verificationLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verificationToken}`;
 

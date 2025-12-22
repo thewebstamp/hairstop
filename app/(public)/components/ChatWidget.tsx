@@ -25,8 +25,24 @@ export default function ChatWidget() {
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [ollamaStatus, setOllamaStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    // Check Ollama status on component mount
+    useEffect(() => {
+        checkOllamaStatus();
+    }, []);
+
+    const checkOllamaStatus = async () => {
+        try {
+            const response = await fetch('/api/chat/free');
+            const data = await response.json();
+            setOllamaStatus(data.status === 'connected' ? 'connected' : 'disconnected');
+        } catch {
+            setOllamaStatus('disconnected');
+        }
+    };
 
     // Auto-scroll to bottom when new messages arrive
     useEffect(() => {
@@ -56,6 +72,17 @@ export default function ChatWidget() {
         setIsLoading(true);
 
         try {
+            // Get conversation history excluding the initial greeting
+            const conversationHistory = messages
+                .filter(msg => msg.id !== '1') // Exclude initial greeting
+                .slice(-4) // Last 2 exchanges (4 messages)
+                .map(msg => ({
+                    role: msg.role,
+                    content: msg.content
+                }));
+
+            console.log('Sending conversation history:', conversationHistory);
+
             const response = await fetch('/api/chat/free', {
                 method: 'POST',
                 headers: {
@@ -63,16 +90,18 @@ export default function ChatWidget() {
                 },
                 body: JSON.stringify({
                     message: input.trim(),
-                    conversation: messages.slice(-6).map(m => ({
-                        role: m.role,
-                        content: m.content
-                    }))
+                    conversation: conversationHistory
                 }),
             });
 
-            if (!response.ok) throw new Error('Failed to get response');
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Server error: ${response.status} - ${errorText}`);
+            }
 
             const data = await response.json();
+
+            console.log('Received response source:', data.source);
 
             const assistantMessage: Message = {
                 id: (Date.now() + 1).toString(),
@@ -82,11 +111,19 @@ export default function ChatWidget() {
             };
 
             setMessages(prev => [...prev, assistantMessage]);
+
+            // Re-check Ollama status if we got a fallback
+            if (data.source === 'fallback') {
+                await checkOllamaStatus();
+            }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error in chat:', error);
             const errorMessage: Message = {
                 id: (Date.now() + 1).toString(),
-                content: "I apologize, I'm having trouble connecting right now. Please try again in a moment or contact us directly at our support email.",
+                content: `I apologize, I'm having technical issues. ${ollamaStatus === 'disconnected'
+                        ? "It seems my AI brain isn't running. Please make sure Ollama is installed and running on your computer, or contact support."
+                        : "Please try again in a moment."
+                    }`,
                 role: 'assistant',
                 timestamp: new Date(),
             };
@@ -108,15 +145,15 @@ export default function ChatWidget() {
             {/* Floating Chat Button */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center group"
+                className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-linear-to-r from-purple-600 to-pink-500 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center group"
                 aria-label="Open chat with Ada"
             >
                 <MessageCircle className="w-7 h-7 text-white" />
-                <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-xs text-white flex items-center justify-center animate-pulse">
-                    <span className="relative inline-flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                    </span>
+                <span className={`absolute -top-2 -right-2 w-6 h-6 rounded-full text-xs text-white flex items-center justify-center ${ollamaStatus === 'connected' ? 'bg-green-500' :
+                        ollamaStatus === 'disconnected' ? 'bg-yellow-500' : 'bg-gray-500'
+                    }`}>
+                    {ollamaStatus === 'connected' ? '✓' :
+                        ollamaStatus === 'disconnected' ? '!' : '?'}
                 </span>
             </button>
 
@@ -124,9 +161,9 @@ export default function ChatWidget() {
             <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
                 <Dialog.Portal>
                     <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
-                    <Dialog.Content className="fixed bottom-0 right-0 md:bottom-6 md:right-6 z-50 w-full md:w-[400px] h-[90vh] md:h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200">
+                    <Dialog.Content className="fixed bottom-0 right-0 md:bottom-6 md:right-6 z-50 w-full md:w-100 h-[90vh] md:h-150 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200">
                         {/* Header */}
-                        <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-4 text-white">
+                        <div className="bg-linear-to-r from-purple-600 to-pink-500 p-4 text-white">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-3">
                                     <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -135,7 +172,9 @@ export default function ChatWidget() {
                                     <div>
                                         <Dialog.Title className="font-bold text-lg">Hair Stop Assistant</Dialog.Title>
                                         <Dialog.Description className="text-sm text-white/90">
-                                            Here to help with your hair needs 💁🏾‍♀️
+                                            {ollamaStatus === 'connected' ? 'AI Assistant Ready 💁🏾‍♀️' :
+                                                ollamaStatus === 'disconnected' ? 'Basic Mode (AI Offline)' :
+                                                    'Checking AI status...'}
                                         </Dialog.Description>
                                     </div>
                                 </div>
@@ -147,6 +186,17 @@ export default function ChatWidget() {
                             </div>
                         </div>
 
+                        {/* Status Banner */}
+                        {ollamaStatus === 'disconnected' && (
+                            <div className="bg-yellow-50 border-b border-yellow-200 p-3 text-sm text-yellow-800">
+                                <p className="font-medium">⚠️ Local AI Not Running</p>
+                                <p className="text-xs mt-1">
+                                    Install and run <a href="https://ollama.ai" target="_blank" className="underline">Ollama</a> for smart responses.
+                                    Currently using basic fallback mode.
+                                </p>
+                            </div>
+                        )}
+
                         {/* Messages Container */}
                         <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
                             {messages.map((message) => (
@@ -156,13 +206,13 @@ export default function ChatWidget() {
                                 >
                                     <div className="flex items-start gap-3">
                                         {message.role === 'assistant' && (
-                                            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                            <div className="w-8 h-8 bg-linear-to-r from-purple-500 to-pink-400 rounded-full flex items-center justify-center shrink-0 mt-1">
                                                 <Bot className="w-4 h-4 text-white" />
                                             </div>
                                         )}
                                         <div
                                             className={`rounded-2xl px-4 py-3 max-w-[80%] ${message.role === 'user'
-                                                ? 'bg-gradient-to-r from-purple-500 to-pink-400 text-white ml-auto'
+                                                ? 'bg-linear-to-r from-purple-500 to-pink-400 text-white ml-auto'
                                                 : 'bg-white border border-gray-200'
                                                 }`}
                                         >
@@ -178,7 +228,7 @@ export default function ChatWidget() {
                                             </div>
                                         </div>
                                         {message.role === 'user' && (
-                                            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center shrink-0 mt-1">
                                                 <User className="w-4 h-4 text-gray-600" />
                                             </div>
                                         )}
@@ -188,13 +238,13 @@ export default function ChatWidget() {
 
                             {isLoading && (
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-400 rounded-full flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-linear-to-r from-purple-500 to-pink-400 rounded-full flex items-center justify-center">
                                         <Bot className="w-4 h-4 text-white" />
                                     </div>
                                     <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
                                         <div className="flex items-center gap-2">
                                             <Loader2 className="w-4 h-4 animate-spin text-purple-500" />
-                                            <span className="text-gray-600">typing...</span>
+                                            <span className="text-gray-600">thinking...</span>
                                         </div>
                                     </div>
                                 </div>
@@ -212,14 +262,18 @@ export default function ChatWidget() {
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyDown={handleKeyDown}
-                                    placeholder="Ask me about our hair, shipping, or services..."
-                                    className="flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    placeholder={
+                                        ollamaStatus === 'connected'
+                                            ? "Ask me about our hair, shipping, or services..."
+                                            : "AI is offline. Using basic responses..."
+                                    }
+                                    className="flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:bg-gray-100"
                                     disabled={isLoading}
                                 />
                                 <button
                                     type="submit"
                                     disabled={isLoading || !input.trim()}
-                                    className="bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-full w-12 h-12 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="bg-linear-to-r from-purple-600 to-pink-500 text-white rounded-full w-12 h-12 flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? (
                                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -229,7 +283,9 @@ export default function ChatWidget() {
                                 </button>
                             </div>
                             <p className="text-xs text-gray-500 text-center mt-2">
-                                I am Hair Stop Chat assistant. For urgent matters, please call us directly.
+                                {ollamaStatus === 'connected'
+                                    ? "Powered by Local AI 💁🏾‍♀️"
+                                    : "Install Ollama for smarter responses. Basic mode active."}
                             </p>
                         </form>
                     </Dialog.Content>

@@ -58,7 +58,7 @@ function getEnhancedBusinessResponse(userMessage: string): string {
   }
 
   if (lowerMessage.includes("thank") || lowerMessage.includes("thanks")) {
-    return "You're welcome! ✨\n\nIf you need more help or want to place an order:\n📞 **Call/WhatsApp:** +234-812-345-6789\n📧 **Email:** info@hairstop.com\n📍 **Visit:** Our Lagos studio\n\nWe're here to help you get the perfect hair! 💁🏾‍♀️";
+    return "You're welcome! ✨\n\nIf you need more help or want to place an order:\n📞 **Call/WhatsApp:** +234-812-345-6789\n\n We're here to help you get the perfect hair! 💁🏾‍♀️";
   }
 
   if (lowerMessage.includes("bye") || lowerMessage.includes("goodbye")) {
@@ -99,7 +99,6 @@ function getEnhancedBusinessResponse(userMessage: string): string {
 | **Styling** | Limited; best for middle/side parts. | Very versatile; allows ponytails, updos, deep parts. |
 | **Look** | Natural but less flexible. | Most natural, undetectable hairline. |
 | **Best For** | Protective styling, beginners, budget. | Full glam, versatile styling, any look. |
-| **Price** | ₦15,000 – ₦35,000 | ₦25,000 – ₦60,000 |
 
 **Still unsure?** Describe the style you want, and I'll recommend the best option!`;
     }

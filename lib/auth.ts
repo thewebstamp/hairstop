@@ -90,14 +90,11 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
 
-          // Check if email is verified
+          // REMOVE OR COMMENT OUT THIS BLOCK: Email verification check
           // if (!user.email_verified) {
-          //   throw new Error('Please verify your email before logging in');
+          //   // Instead of throwing an error, just return null to indicate failed login
+          //   return null;
           // }
-          if (!user.email_verified) {
-            // Instead of throwing an error, just return null to indicate failed login
-            return null;
-          }
 
           // Update last login
           await client.query(

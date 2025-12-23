@@ -49,11 +49,12 @@ export default function RegisterPage() {
       if (!response.ok) {
         setError(data.error || 'Registration failed')
       } else {
-        setSuccess(data.message || 'Registration successful! Please check your email.')
+        setSuccess('Registration successful! You can now login to your account.')
         setFormData({ name: '', email: '', password: '', phone: '' })
+        // Redirect to login page after 2 seconds
         setTimeout(() => {
           router.push('/auth/login')
-        }, 3000)
+        }, 2000)
       }
     } catch (error) {
       setError('An error occurred. Please try again.')

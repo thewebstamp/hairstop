@@ -43,9 +43,9 @@ export default function LoginPage() {
     }
   }
 
-  const handleSocialLogin = (provider: 'google' | 'facebook') => {
-    signIn(provider, { callbackUrl: '/' })
-  }
+  // const handleSocialLogin = (provider: 'google' | 'facebook') => {
+  //   signIn(provider, { callbackUrl: '/' })
+  // }
 
   return (
     <div className="min-h-screen bg-linear-to-br from-[#faf9f6] via-[#f7e7ce] to-[#f5c8c8] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -144,7 +144,7 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
@@ -163,7 +163,7 @@ export default function LoginPage() {
                   Google
                 </button>
               </div>
-            </div>
+            </div> */}
 
             <div className="mt-8 pt-6 border-t border-[#f5c8c8] text-center">
               <p className="text-gray-600">

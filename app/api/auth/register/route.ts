@@ -1,14 +1,8 @@
 // app/api/auth/register/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto'; // Import crypto directly
 import pool from '@/lib/db';
-import { sendWelcomeEmail } from '@/lib/email';
-
-// Local generateToken function
-function generateToken(length: number = 32): string {
-  return crypto.randomBytes(length).toString('hex');
-}
+import { sendWelcomeEmail } from '@/lib/email'; // We'll update this function
 
 export async function POST(request: NextRequest) {
   console.log('=== REGISTRATION STARTED ===');
@@ -55,50 +49,43 @@ export async function POST(request: NextRequest) {
       console.log('Hashing password...');
       const hashedPassword = await bcrypt.hash(password, 10);
       
-      // Generate verification token
-      const verificationToken = generateToken();
-      const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-      
-      console.log('Token generated:', verificationToken);
-      console.log('Expires:', verificationExpires);
-
-      // Create user
+      // Create user - set email_verified to current timestamp immediately
       console.log('Creating user in database...');
       const result = await client.query(
         `INSERT INTO users 
-         (name, email, password_hash, phone, verification_token, verification_expires, created_at)
-         VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP)
-         RETURNING id, name, email, role`,
-        [name, email.toLowerCase(), hashedPassword, phone || null, verificationToken, verificationExpires]
+         (name, email, password_hash, phone, email_verified, created_at)
+         VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+         RETURNING id, name, email, role, email_verified`,
+        [name, email.toLowerCase(), hashedPassword, phone || null]
       );
 
       const user = result.rows[0];
       console.log('User created:', user);
 
-      // Send welcome email
+      // Send welcome email WITHOUT verification requirement
       console.log('Attempting to send welcome email...');
-      console.log('Email settings:', {
-        host: process.env.EMAIL_HOST,
-        user: process.env.EMAIL_USER,
-        from: process.env.EMAIL_FROM,
-        nodeEnv: process.env.NODE_ENV
-      });
-
       try {
+        // Use the updated sendWelcomeEmail function (without verification token)
         const emailResult = await sendWelcomeEmail({
           to: email,
           name: name,
-          verificationToken,
         });
-        console.log('Email send result:', emailResult);
+        console.log('Welcome email send result:', emailResult);
       } catch (emailError) {
-        console.error('Email sending failed:', emailError);
+        console.error('Welcome email sending failed:', emailError);
+        // Don't fail registration if email sending fails
       }
 
       return NextResponse.json({
         success: true,
-        user,
-        message: 'Registration successful! Please check your email to verify your account.'
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          email_verified: user.email_verified
+        },
+        message: 'Registration successful! You can now login to your account.'
       });
     } finally {
       client.release();

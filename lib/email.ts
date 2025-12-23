@@ -12,76 +12,137 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// In lib/email.ts - MODIFY the existing sendWelcomeEmail function:
+
 export async function sendWelcomeEmail({
   to,
   name,
-  verificationToken,
+  verificationToken, // Make this parameter optional by adding ?
 }: {
   to: string;
   name: string;
-  verificationToken: string;
+  verificationToken?: string; // Add ? to make it optional
 }) {
   const storeName = "Hair Stop";
   const storeEmail = "noreply@hairstop.ng";
 
-  const verificationLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verificationToken}`;
+  // Create login link
+  const loginLink = `${process.env.NEXTAUTH_URL}/auth/login`;
+
+  // Determine email content based on whether we have a verification token
+  let emailContent = "";
+
+  if (verificationToken) {
+    // Old logic - if verification token is provided (for backward compatibility)
+    const verificationLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verificationToken}`;
+    emailContent = `
+      <p>To get started, please verify your email address by clicking the button below:</p>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${verificationLink}" 
+           style="background-color: #8B5A2B; color: white; padding: 12px 24px; 
+                  text-decoration: none; border-radius: 4px; font-weight: bold;">
+          Verify Email Address
+        </a>
+      </div>
+      
+      <p>Or copy and paste this link in your browser:</p>
+      <p style="background-color: #f5f5f5; padding: 10px; border-radius: 4px; word-break: break-all;">
+        ${verificationLink}
+      </p>
+      
+      <p>This verification link will expire in 24 hours.</p>
+    `;
+  } else {
+    // New logic - no verification needed
+    emailContent = `
+      <p>Your account is now active and ready to use! 🎉</p>
+      
+      <p>You can login immediately and start exploring our premium hair products:</p>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${loginLink}" 
+           style="background-color: #8B5A2B; color: white; padding: 12px 24px; 
+                  text-decoration: none; border-radius: 4px; font-weight: bold;">
+          Login to Your Account
+        </a>
+      </div>
+    `;
+  }
 
   const mailOptions = {
     from: `"${storeName}" <${process.env.EMAIL_FROM || storeEmail}>`,
     to,
-    subject: `Welcome to ${storeName}! Verify Your Email`,
+    subject: verificationToken
+      ? `Welcome to ${storeName}! Verify Your Email`
+      : `Welcome to ${storeName}, ${name}!`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #8B5A2B;">Welcome to ${storeName}, ${name}! 🎉</h2>
         
         <p>Thank you for creating an account with Hair Stop. We're excited to have you join our community of hair enthusiasts!</p>
         
-        <p>To get started, please verify your email address by clicking the button below:</p>
+        ${emailContent}
         
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${verificationLink}" 
-             style="background-color: #8B5A2B; color: white; padding: 12px 24px; 
-                    text-decoration: none; border-radius: 4px; font-weight: bold;">
-            Verify Email Address
-          </a>
-        </div>
-        
-        <p>Or copy and paste this link in your browser:</p>
-        <p style="background-color: #f5f5f5; padding: 10px; border-radius: 4px; word-break: break-all;">
-          ${verificationLink}
-        </p>
-        
-        <p>This verification link will expire in 24 hours.</p>
-        
-        <p>Once verified, you can:</p>
+        <p>With your account, you can:</p>
         <ul>
-          <li>Save your favorite hair products</li>
-          <li>Track your orders</li>
+          <li>Browse and purchase our premium hair products</li>
+          <li>Save your favorite items for later</li>
+          <li>Track your orders in real-time</li>
           <li>Write reviews and earn rewards</li>
           <li>Get exclusive offers and discounts</li>
         </ul>
         
-        <p>If you have any questions, feel free to reply to this email or contact our support team.</p>
+        <p><strong>Need help?</strong></p>
+        <p>Contact our support team at support@hairstop.ng or reply to this email.</p>
         
         <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
         
         <p style="color: #666; font-size: 12px;">
-          If you didn't create an account with Hair Stop, please ignore this email.
+          ${
+            verificationToken
+              ? "If you didn't create an account with Hair Stop, please ignore this email."
+              : "You're receiving this email because you created an account at Hair Stop."
+          }
+        </p>
+        
+        <p style="color: #666; font-size: 12px; text-align: center;">
+          &copy; ${new Date().getFullYear()} Hair Stop. All rights reserved.
         </p>
       </div>
     `,
   };
 
-  // In production, send actual email
+  // Production vs Development handling
   if (process.env.NODE_ENV === "production") {
-    return await transporter.sendMail(mailOptions);
+    try {
+      return await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error("Error sending welcome email:", error);
+      return {
+        message: "Failed to send email, but account was created successfully",
+        error,
+      };
+    }
   } else {
-    // In development, log the email
-    console.log("Welcome email details:", {
+    // Development mode - log instead of sending
+    console.log("📧 Welcome Email (Development Mode):", {
       to,
-      verificationLink,
+      name,
+      subject: mailOptions.subject,
+      hasVerification: !!verificationToken,
+      loginLink: verificationToken ? "N/A (verification required)" : loginLink,
+      preview: `Email would be sent with subject: "${mailOptions.subject}"`,
     });
-    return { message: "Email logged in development" };
+
+    return {
+      message: "Email logged in development mode - would be sent in production",
+      preview: {
+        subject: mailOptions.subject,
+        recipient: to,
+        hasVerification: !!verificationToken,
+      },
+    };
   }
 }
 

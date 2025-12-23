@@ -210,9 +210,9 @@ export default function RegisterPage() {
 
               <div className="text-xs text-gray-500 text-center space-y-2">
                 <p>By creating an account, you agree to our Terms of Service and Privacy Policy.</p>
-                <p className="text-[#800020] font-medium">
+                {/* <p className="text-[#800020] font-medium">
                   After registration, you&apos;ll receive a verification email. You must verify your email before logging in.
-                </p>
+                </p> */}
               </div>
             </form>
 

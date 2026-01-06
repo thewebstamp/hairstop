@@ -12,6 +12,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface DashboardStats {
   totalRevenue: number;
@@ -213,7 +214,7 @@ export default function AdminDashboard() {
               View All
             </Link>
           </div>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
               <div className="flex items-center">
@@ -225,19 +226,6 @@ export default function AdminDashboard() {
               </div>
               <span className="text-lg font-bold text-yellow-700">
                 {stats?.pendingOrders || 0}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-              <div className="flex items-center">
-                <AlertTriangle className="h-5 w-5 text-red-600 mr-3" />
-                <div>
-                  <p className="font-medium text-gray-900">Low Stock</p>
-                  <p className="text-sm text-gray-600">Products running out</p>
-                </div>
-              </div>
-              <span className="text-lg font-bold text-red-700">
-                {stats?.lowStockProducts || 0}
               </span>
             </div>
           </div>
@@ -351,11 +339,15 @@ export default function AdminDashboard() {
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center">
                       {product.image && (
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="h-10 w-10 rounded-md object-cover mr-3"
-                        />
+                        <div className="h-10 w-10 relative mr-3">
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            sizes="40px"
+                            className="rounded-md object-cover"
+                          />
+                        </div>
                       )}
                       <div>
                         <div className="text-sm font-medium text-gray-900">

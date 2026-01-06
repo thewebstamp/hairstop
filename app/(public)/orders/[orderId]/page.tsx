@@ -13,7 +13,6 @@ const statusSteps = [
   { key: 'pending', label: 'Pending Payment', icon: '⏳' },
   { key: 'payment_pending', label: 'Payment Review', icon: '👁️' },
   { key: 'processing', label: 'Processing', icon: '⚙️' },
-  { key: 'confirmed', label: 'Confirmed', icon: '✅' },
   { key: 'shipped', label: 'Shipped', icon: '🚚' },
   { key: 'delivered', label: 'Delivered', icon: '📬' },
 ];
@@ -165,7 +164,7 @@ export default function OrderDetailsPage() {
             </h2>
             
             <div className="relative mb-8">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-2">
                 {statusSteps.map((step, index) => (
                   <div key={step.key} className="flex flex-col items-center">
                     <div className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center border-2 transition-all duration-500 ${
@@ -197,7 +196,7 @@ export default function OrderDetailsPage() {
                 </div>
                 <div className="text-sm text-gray-600 mt-2">
                   {order.status === 'payment_pending' ? (
-                    'We are reviewing your payment proof. This usually takes 1-2 business days.'
+                    'We are reviewing your payment proof. This usually takes 1min - 24hrs.'
                   ) : order.status === 'shipped' ? (
                     'Your order is on the way! Track your package for delivery updates.'
                   ) : order.status === 'delivered' ? (
@@ -433,7 +432,7 @@ export default function OrderDetailsPage() {
                   <div className="space-y-3">
                     <div className="p-3 bg-linear-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl">
                       <div className="font-medium text-blue-800 mb-1">Email Support</div>
-                      <div className="text-blue-700">support@hairstop.ng</div>
+                      <div className="text-blue-700">Hairstopwigsandextentions@ gmail.com</div>
                     </div>
                     <div className="p-3 bg-linear-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
                       <div className="font-medium text-green-800 mb-1">WhatsApp</div>

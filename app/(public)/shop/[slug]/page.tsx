@@ -173,7 +173,7 @@ export default async function ProductDetailPage({
               </div>
 
               {/* Quick Stock Status */}
-              <div className="flex items-center gap-3">
+              {/* <div className="flex items-center gap-3">
                 <div className={`w-3 h-3 rounded-full ${product.stock > 0 ? 'bg-linear-to-r from-green-500 to-emerald-600' : 'bg-linear-to-r from-red-500 to-rose-600'}`} />
                 <span className={`font-medium ${product.stock > 0 ? 'text-green-700' : 'text-red-700'}`}>
                   {product.stock > 0
@@ -186,7 +186,7 @@ export default async function ProductDetailPage({
                   <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                   <span className="font-medium">Low stock • Order soon!</span>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* Product Form */}

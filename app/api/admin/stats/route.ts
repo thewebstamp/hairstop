@@ -43,13 +43,13 @@ export async function GET(request: NextRequest) {
         // Today's revenue
         client.query(
           `SELECT COALESCE(SUM(total_amount), 0) as amount FROM orders 
-           WHERE status = 'completed' AND created_at >= $1`,
+           WHERE status = 'delivered' AND created_at >= $1`,
           [startOfToday]
         ),
         // This month's revenue
         client.query(
           `SELECT COALESCE(SUM(total_amount), 0) as amount FROM orders 
-           WHERE status = 'completed' AND created_at >= $1`,
+           WHERE status = 'delivered' AND created_at >= $1`,
           [startOfMonth]
         ),
         // Total orders
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
           FROM order_items oi
           JOIN products p ON oi.product_id = p.id
           JOIN orders o ON oi.order_id = o.id
-          WHERE o.status = 'completed'
+          WHERE o.status = 'delivered'
           GROUP BY p.id, p.name, p.images
           ORDER BY revenue DESC
           LIMIT 5

@@ -11,7 +11,7 @@ export default async function Footer() {
     const categories = await getCategories();
 
     const socialLinks = [
-        { icon: <Instagram className="w-5 h-5" />, label: "Instagram", href: "https://instagram.com" },
+        { icon: <Instagram className="w-5 h-5" />, label: "Instagram", href: "https://instagram.com/hair_stop1" },
         { icon: <Facebook className="w-5 h-5" />, label: "Facebook", href: "https://facebook.com" },
     ];
 
@@ -137,7 +137,7 @@ export default async function Footer() {
                                 <Mail className="w-5 h-5 text-[#b76e79] mt-0.5" />
                                 <div>
                                     <p className="font-medium text-gray-800">Email</p>
-                                    <p className="text-gray-600 text-sm">hairstop.ng@gmail.com</p>
+                                    <p className="text-gray-600 text-sm">Hairstopwigsandextentions@ gmail.com</p>
                                 </div>
                             </li>
                             <li className="flex flex-col md:flex-row md:items-start items-center gap-3">

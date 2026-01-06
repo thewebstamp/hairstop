@@ -322,11 +322,6 @@ export default function OrdersPage() {
                 </option>
               ))}
             </select>
-
-            <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
-              <Filter className="h-4 w-4 mr-2" />
-              More Filters
-            </button>
           </div>
         </div>
 

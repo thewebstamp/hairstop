@@ -183,7 +183,7 @@ export default function ProductImageGallery({
             )}
             
             {/* Stock Status */}
-            <div className="absolute top-4 right-4">
+            {/* <div className="absolute top-4 right-4">
               <div className={`px-4 py-2 rounded-full text-sm font-semibold shadow-lg backdrop-blur-sm border ${
                 stock > 0 
                   ? 'bg-linear-to-r from-emerald-500/90 to-emerald-600/90 text-white border-emerald-200/30' 
@@ -191,7 +191,7 @@ export default function ProductImageGallery({
               }`}>
                 {stock > 0 ? `${stock} in stock` : 'Out of stock'}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 

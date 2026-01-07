@@ -25,11 +25,11 @@ export const metadata: Metadata = {
   keywords: ['human hair', 'hair bundles', 'wigs', 'frontals', 'luxury hair', 'Nigeria', 'hair shop'],
   authors: [{ name: 'Hair Stop' }],
   creator: 'Hair Stop',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://hairstop.ng'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://hairstop.shop'),
   openGraph: {
     type: 'website',
     locale: 'en_NG',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://hairstop.ng',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://hairstop.shop',
     title: 'Hair Stop - Luxury Hair Boutique',
     description: 'Premium human hair bundles, wigs, frontals and closures',
     siteName: 'Hair Stop',

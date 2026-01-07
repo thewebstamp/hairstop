@@ -8,10 +8,6 @@ import {
   ShoppingBag,
   Users,
   TrendingUp,
-  TrendingDown,
-  Calendar,
-  Download,
-  Filter,
   BarChart3,
   PieChart,
   Activity,
@@ -100,7 +96,7 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <div className="text-lg">Loading analytics...</div>
       </div>
     );
@@ -132,10 +128,6 @@ export default function AnalyticsPage() {
             <option value="90d">Last 90 Days</option>
             <option value="1y">Last Year</option>
           </select>
-          <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </button>
         </div>
       </div>
 
@@ -225,8 +217,8 @@ export default function AnalyticsPage() {
               <button
                 onClick={() => setChartType('revenue')}
                 className={`px-3 py-1 text-sm rounded-md ${chartType === 'revenue'
-                    ? 'bg-primary text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-primary text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
               >
                 Revenue
@@ -234,8 +226,8 @@ export default function AnalyticsPage() {
               <button
                 onClick={() => setChartType('orders')}
                 className={`px-3 py-1 text-sm rounded-md ${chartType === 'orders'
-                    ? 'bg-primary text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-primary text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
               >
                 Orders
@@ -292,7 +284,7 @@ export default function AnalyticsPage() {
                     {index + 1}
                   </div>
                   <div className="ml-3">
-                    <div className="text-sm font-medium text-gray-900 truncate max-w-[150px]">
+                    <div className="text-sm font-medium text-gray-900 truncate max-w-37.5">
                       {product.name}
                     </div>
                     <div className="text-xs text-gray-500">
@@ -311,56 +303,6 @@ export default function AnalyticsPage() {
 
       {/* Additional Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Category Distribution */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">Revenue by Category</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <RechartsPieChart>
-                <Pie
-                  data={data.categoryDistribution}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={(props) => {
-                    // Type the props properly
-                    const { x, y, textAnchor, payload } = props as any;
-                    const entry = payload.payload; // Access the actual data entry
-                    const percentage = totalRevenue > 0 ? (entry.revenue / totalRevenue) * 100 : 0;
-                    return (
-                      <text
-                        x={x}
-                        y={y}
-                        textAnchor={textAnchor}
-                        fill="#333"
-                        fontSize={12}
-                        fontWeight={500}
-                      >
-                        {entry.category}: {percentage.toFixed(0)}%
-                      </text>
-                    );
-                  }}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="revenue"
-                >
-                  {data.categoryDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value: any) => [formatCurrency(Number(value)), 'Revenue']}
-                  labelFormatter={(label, payload) => {
-                    if (payload && payload.length > 0) {
-                      return payload[0].payload.category;
-                    }
-                    return label;
-                  }}
-                />
-              </RechartsPieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
 
         {/* Orders by Category */}
         <div className="bg-white rounded-lg shadow p-6">
@@ -401,19 +343,19 @@ export default function AnalyticsPage() {
             <h4 className="font-medium text-gray-700 mb-2">Performance Summary</h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li className="flex items-start">
-                <TrendingUp className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <TrendingUp className="h-4 w-4 text-green-500 mr-2 mt-0.5 shrink-0" />
                 <span>
                   Average daily revenue: {formatCurrency(data.totalRevenue / 30)}
                 </span>
               </li>
               <li className="flex items-start">
-                <ShoppingBag className="h-4 w-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                <ShoppingBag className="h-4 w-4 text-blue-500 mr-2 mt-0.5 shrink-0" />
                 <span>
                   Average orders per day: {(data.totalOrders / 30).toFixed(1)}
                 </span>
               </li>
               <li className="flex items-start">
-                <Users className="h-4 w-4 text-purple-500 mr-2 mt-0.5 flex-shrink-0" />
+                <Users className="h-4 w-4 text-purple-500 mr-2 mt-0.5 shrink-0" />
                 <span>
                   Customer growth rate: {data.totalCustomers > 0
                     ? ((data.newCustomers / data.totalCustomers) * 100).toFixed(1)
@@ -427,19 +369,19 @@ export default function AnalyticsPage() {
             <h4 className="font-medium text-gray-700 mb-2">Recommendations</h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li className="flex items-start">
-                <BarChart3 className="h-4 w-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
+                <BarChart3 className="h-4 w-4 text-primary mr-2 mt-0.5 shrink-0" />
                 <span>
                   Focus on promoting top-performing products to increase revenue
                 </span>
               </li>
               <li className="flex items-start">
-                <PieChart className="h-4 w-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
+                <PieChart className="h-4 w-4 text-primary mr-2 mt-0.5 shrink-0" />
                 <span>
                   Consider expanding popular categories based on customer demand
                 </span>
               </li>
               <li className="flex items-start">
-                <Activity className="h-4 w-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
+                <Activity className="h-4 w-4 text-primary mr-2 mt-0.5 shrink-0" />
                 <span>
                   Monitor conversion rate and optimize checkout process if needed
                 </span>

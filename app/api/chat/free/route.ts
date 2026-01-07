@@ -58,28 +58,28 @@ function getEnhancedBusinessResponse(userMessage: string): string {
   }
 
   if (lowerMessage.includes("thank") || lowerMessage.includes("thanks")) {
-    return "You're welcome! ✨\n\nIf you need more help or want to place an order:\n📞 **Call/WhatsApp:** +234-812-345-6789\n\n We're here to help you get the perfect hair! 💁🏾‍♀️";
+    return "You're welcome! ✨\n\nIf you need more help or want to place an order:\n📞 **Call/WhatsApp:** +234-903-698-1564\n\n We're here to help you get the perfect hair! 💁🏾‍♀️";
   }
 
   if (lowerMessage.includes("bye") || lowerMessage.includes("goodbye")) {
-    return "Goodbye! 👋 Thank you for visiting Hair Stop.\n\nRemember, we're your first stop for quality and luxury hair! 💁🏾‍♀️\n\nNeed help later? We're always here!\n📞 +234-812-345-6789";
+    return "Goodbye! 👋 Thank you for visiting Hair Stop.\n\nRemember, we're your first stop for quality and luxury hair! 💁🏾‍♀️\n\nNeed help later? We're always here!\n📞 +234-903-698-1564";
   }
 
   // 2. PRODUCT-SPECIFIC RESPONSES (Most Specific - Check First)
   if (lowerMessage.includes("frontal")) {
-    return "**Frontals** are premium hairpieces that create a natural-looking hairline from ear to ear! 💁🏾‍♀️\n\n**Features:**\n• 100% imported human hair\n• Lace or silk base options\n• Available in 13x4, 13x6, 13x8 inches\n• Can be tinted to match your skin tone\n• Perfect for versatile styling (ponytails, updos, etc.)\n\n**Price Range:** ₦25,000 - ₦60,000\n\nWould you like to know about installation or maintenance?";
+    return "**Frontals** are premium hairpieces that create a natural-looking hairline from ear to ear! 💁🏾‍♀️\n\n**Features:**\n• 100% imported human hair\n• Lace or silk base options\n• Available in different lengths\n• Can be tinted to match your skin tone\n• Perfect for versatile styling (ponytails, updos, etc.)\n\nWould you like to know about installation or maintenance?";
   }
 
   if (lowerMessage.includes("closure")) {
-    return "**Closures** cover a 4x4 inch section - perfect for protective styling! ✨\n\n**Types we offer:**\n• **Lace closures** - Most natural look\n• **Silk base closures** - No bleaching needed\n• **360 closures** - For full perimeter styling\n\n**Benefits:**\n• Protects your natural hair\n• Easy to install\n• Reusable with proper care\n• Available in all textures (straight, wavy, curly)\n\n**Price:** ₦15,000 - ₦35,000";
+    return "**Closures** cover a 4x4 inch section - perfect for protective styling! ✨\n\n**Types we offer:**\n• **Lace closures** - Most natural look\n• **Silk base closures** - No bleaching needed\n• **360 closures** - For full perimeter styling\n\n**Benefits:**\n• Protects your natural hair\n• Easy to install\n• Reusable with proper care\n• Available in all textures (straight, wavy, curly)";
   }
 
   if (lowerMessage.includes("wig")) {
-    return "We offer both **ready-made wigs** and **custom wig making**! 👑\n\n**Ready-made Wigs:**\n• Available for immediate purchase\n• Various lengths (14-30 inches)\n• Lace front & full lace options\n• Human hair & synthetic blends\n\n**Custom Wigs:**\n• Made to your specifications\n• Choose hair type, length, density\n• Perfect fit guaranteed\n• 7-10 days production time\n\n**Starting Price:** ₦40,000 for ready-made, ₦60,000 for custom";
+    return "We offer both **ready-made wigs** and **custom wig making**! 👑\n\n**Ready-made Wigs:**\n• Available in various lengths \n• Lace front & full lace options\n• Human hair & synthetic blends\n\n**Custom Wigs:**\n• Made to your specifications\n• Choose hair type, length, density\n• Perfect fit guaranteed\n• 7-21 days production time";
   }
 
   if (lowerMessage.includes("bundle")) {
-    return '**Hair Bundles** - The foundation of any great install! 💫\n\n**Available Hair Types:**\n• **Brazilian** - Thick, durable, minimal shedding\n• **Peruvian** - Soft, silky, natural wave\n• **Malaysian** - Super straight, glossy finish\n• **Virgin Hair** - Unprocessed, highest quality\n\n**Lengths:** 10", 12", 14", 16", 18", 20", 22", 24", 26", 28", 30"\n\n**Price per bundle:** ₦8,000 - ₦25,000\n\nHow many bundles do you need for your install?';
+    return '**Hair Bundles** - The foundation of any great install! 💫\n\n**Available Hair Types:**\n• **Brazilian** - Thick, durable, minimal shedding\n• **Peruvian** - Soft, silky, natural wave\n• **Malaysian** - Super straight, glossy finish\n• **Virgin Hair** - Unprocessed, highest quality and more\n\n**Lengths:** 10", 12", 14", 16", 18", 20", 22", 24", 26", 28", 30"\n\n** How many bundles do you need for your install?';
   }
 
   // 3. SPECIFIC COMPARISONS & STYLE RECOMMENDATIONS
@@ -124,7 +124,7 @@ A **13x4 or 13x6 Frontal** is perfect because:
 • The lace melts seamlessly into your skin for that **undetectable, natural look**.
 • It's the go-to choice for **maximum versatility and glam**.
 
-**Ready to order or need a price quote?** Message us on WhatsApp at **+234-812-345-6789** with "Frontal" and your preferred length/texture.`;
+**Ready to order or need a price quote?** Message us on WhatsApp at **+234-903-698-1564** with "Frontal" and your preferred length/texture.`;
   }
 
   if (
@@ -145,13 +145,13 @@ A **4x4 Lace Closure** is ideal because:
 • It perfectly suits **middle parts, side parts, and simple styles**.
 • It's excellent for **protective styling**, covering just a small section while your natural hair rests.
 
-**Want to see closure options?** Chat with us on WhatsApp at **+234-812-345-6789** and ask for "Closure pictures and prices".`;
+**Want to see closure options?** Chat with us on WhatsApp at **+234-903-698-1564** and ask for "Closure pictures and prices".`;
   }
 
   // 4. SPECIFIC BUSINESS TOPICS (Shipping, Price, Services, etc.)
   // Shipping questions
   if (lowerMessage.includes("ship") || lowerMessage.includes("deliver")) {
-    return "**Shipping Information** 🚚\n\n**Delivery Time:** 7-21 days maximum\n\n**Shipping Costs:**\n• Orders over ₦1,000,000 = FREE shipping\n\n**Important Notes:**\n1. Hair price does NOT include shipping\n2. Shipping cost is calculated after order review\n3. Pay for delivery WHEN hair arrives at your gate\n4. Track your order via WhatsApp\n\nNeed a shipping quote? Send your location!";
+    return "**Shipping Information** 🚚\n\n**Delivery Time:** 7-21 \n\n**Shipping Costs:**\n• Orders over ₦1,000,000 = FREE shipping\n\n**Important Notes:**\n1. Hair price does NOT include shipping\n2. Shipping cost is calculated after order review\n3. Pay for delivery WHEN hair arrives at your gate\n4. Track your order \n\nNeed a shipping quote? Contact us via whatsapp";
   }
 
   // Price questions
@@ -160,7 +160,7 @@ A **4x4 Lace Closure** is ideal because:
     lowerMessage.includes("cost") ||
     lowerMessage.includes("how much")
   ) {
-    return "**Pricing Information** 💰\n\nPrices vary by:\n• Hair type (Brazilian, Peruvian, Malaysian)\n• Length\n• Texture (straight, wavy, curly)\n• Quantity\n\n**For exact pricing**, please contact us via:\n📞 **Phone:** +234-812-345-6789\n💬 **WhatsApp:** +234-812-345-6789\n📧 **Email:** info@hairstop.com\n\nWe'll give you the best quote!";
+    return "**Pricing Information** 💰\n\nPrices vary by:\n• Hair type (Brazilian, Peruvian, Malaysian)\n• Length\n• Texture (straight, wavy, curly)\n• Quantity\n\n**For exact pricing**, please contact us via:\n📞 **Phone:** +234-903-698-1564\n💬 **WhatsApp:** +234-903-698-1564\n📧 **Email:** info@hairstop.com\n\nWe'll give you the best quote!";
   }
 
   // Services
@@ -169,7 +169,7 @@ A **4x4 Lace Closure** is ideal because:
     lowerMessage.includes("install") ||
     lowerMessage.includes("revamp")
   ) {
-    return "**Our Professional Services** ✂️\n\n1. **Hair Installation** - Expert wig/weave installation\n2. **Hair Revamping** - Refresh old or damaged hair\n3. **Custom Wig Making** - Made to your exact specifications\n4. **Hair Maintenance** - Cleaning, conditioning, styling\n5. **Periodic Maintenance Plans** - Discounted packages\n\n**Studio Location:** Lagos, Nigeria\n**Appointment Required:** Yes\n**Service Hours:** Mon-Sat: 9AM-6PM\n\nBook an appointment: +234-812-345-6789";
+    return "**Our Professional Services** ✂️\n\n1. **Hair Installation** - Expert wig/weave installation\n2. **Hair Revamping** - Refresh old or damaged hair\n3. **Custom Wig Making** - Made to your exact specifications\n4. **Hair Maintenance** - Cleaning, conditioning, styling\n5. **Periodic Maintenance Plans** - Discounted packages\n\n\nBook an appointment: +234-903-698-1564";
   }
 
   // Payment
@@ -178,7 +178,7 @@ A **4x4 Lace Closure** is ideal because:
     lowerMessage.includes("pay") ||
     lowerMessage.includes("bank")
   ) {
-    return "**Payment Methods** 💳\n\n**Bank Transfer:**\n🏦 **Bank:** UBA (United Bank for Africa)\n📋 **Account Name:** HAIR STOP\n🔢 **Account Number:** 1028154357\n\n**Other Methods:**\n• POS available at our studio\n• Cash on delivery (Lagos only)\n• Payment plans available\n\n**After Payment:**\n1. Send proof of payment to +234-812-345-6789\n2. Include your name and order details\n3. We'll confirm within 24 hours\n\nNeed help with payment? Call us!";
+    return "**Payment Methods** 💳\n\n**Bank Transfer:**\n🏦 **Bank:** UBA (United Bank for Africa)\n📋 **Account Name:** HAIR STOP\n🔢 **Account Number:** 1028154357\n\n**Other Methods:**\n• POS available at our studio\n• Cash on delivery (Lagos only)\n• Payment plans available\n\n**After Payment:**\n1. Upload proof of payment on website or send to +234-903-698-1564\n2. Include your name and order details\n3. We'll confirm within 24 hours\n\nNeed help with payment? Call us!";
   }
 
   // Contact
@@ -188,7 +188,7 @@ A **4x4 Lace Closure** is ideal because:
     lowerMessage.includes("call") ||
     lowerMessage.includes("email")
   ) {
-    return "**Contact Hair Stop** 📞\n\n**Phone/WhatsApp:** +234-812-345-6789\n**Email:**nCall or WhatsApp for immediate response!";
+    return "**Contact Hair Stop** 📞\n\n**Phone/WhatsApp:** +234-903-698-1564\n**Email: hairstopwigsandextentions@gmail.com**nCall or WhatsApp for immediate response!";
   }
 
   // 5. PRODUCT ATTRIBUTES & RECOMMENDATIONS (More General)
@@ -210,7 +210,7 @@ A **4x4 Lace Closure** is ideal because:
 • **Curly/Kinky Curly** – Coiled and full of bounce
 • **Bundles with Closure/Frontal** – Get a complete, matching set
 
-**Pro Tip:** Most textures can be lightly styled with heat tools. For the best match, describe your goal or send us a style picture on WhatsApp (+234-812-345-6789)!`;
+**Pro Tip:** Most textures can be lightly styled with heat tools. For the best match, describe your goal or send us a style picture on WhatsApp (+234-903-698-1564)!`;
   }
 
   // Quality & "Virgin Hair" Inquiries
@@ -247,7 +247,7 @@ We regularly stock:
 • **All textures** (Straight, Wave, Curly)
 • **Closures & Frontals** (Lace & Silk base)
 
-**For the most current stock, specific colors, or to reserve an item,** please message us directly on WhatsApp at **+234-812-345-6789** with your request. We'll confirm instantly!`;
+**For the most current stock, specific colors, or to reserve an item,** please message us directly on WhatsApp at **+234-903-698-1564** with your request. We'll confirm instantly!`;
   }
 
   // Recommendation & "What should I get?" Questions
@@ -345,6 +345,6 @@ I specialize in helping with everything about **Hair Stop**:
 • "How can I contact you?"
 
 Or contact us directly:
-📞 **Phone/WhatsApp:** +234-812-345-6789
-📧 **Email:** info@hairstop.com`;
+📞 **Phone/WhatsApp:** +234-903-698-1564
+📧 **Email:** hairstopwigsandextentions@gmail.com`;
 }

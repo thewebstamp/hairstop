@@ -43,7 +43,7 @@ export async function sendOrderStatusEmail({
   const orderLink = `${process.env.NEXTAUTH_URL}/orders/${orderId}`;
   
   const mailOptions = {
-    from: `"Hair Stop" <${process.env.EMAIL_FROM || "noreply@hairstop.ng"}>`,
+    from: `"Hair Stop" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
     to,
     subject: `Order Update - #${orderNumber}`,
     html: `
@@ -112,7 +112,7 @@ export async function sendAdminNotificationEmail({
 }) {
   const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS 
     ? process.env.ADMIN_NOTIFICATION_EMAILS.split(',') 
-    : [process.env.ADMIN_EMAIL || 'admin@hairstop.ng'];
+    : [process.env.ADMIN_EMAIL || 'hairstopwigsandextentions@gmail.com'];
 
   const subject = newStatus 
     ? `Order #${orderNumber} Status Updated to ${newStatus}`
@@ -125,7 +125,7 @@ export async function sendAdminNotificationEmail({
   const adminOrderLink = `${process.env.NEXTAUTH_URL}/admin/orders/${orderId}`;
   
   const mailOptions = {
-    from: `"Hair Stop Admin" <${process.env.EMAIL_FROM || "noreply@hairstop.ng"}>`,
+    from: `"Hair Stop Admin" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
     to: adminEmails.join(', '),
     subject,
     html: `
@@ -180,7 +180,7 @@ export async function sendAdminNotificationEmail({
 export async function sendLowStockAlert(products: any[]) {
   const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS 
     ? process.env.ADMIN_NOTIFICATION_EMAILS.split(',') 
-    : [process.env.ADMIN_EMAIL || 'admin@hairstop.ng'];
+    : [process.env.ADMIN_EMAIL || 'hairstopwigsandextentions@gmail.com'];
 
   if (products.length === 0) return;
 
@@ -194,7 +194,7 @@ export async function sendLowStockAlert(products: any[]) {
   `).join('');
 
   const mailOptions = {
-    from: `"Hair Stop Inventory" <${process.env.EMAIL_FROM || "noreply@hairstop.ng"}>`,
+    from: `"Hair Stop Inventory" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
     to: adminEmails.join(', '),
     subject: `Low Stock Alert - ${products.length} Product${products.length > 1 ? 's' : ''}`,
     html: `
@@ -269,7 +269,7 @@ export async function sendDailySalesReport({
 }) {
   const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS 
     ? process.env.ADMIN_NOTIFICATION_EMAILS.split(',') 
-    : [process.env.ADMIN_EMAIL || 'admin@hairstop.ng'];
+    : [process.env.ADMIN_EMAIL || 'hairstopwigsandextentions@gmail.com'];
 
   const topProductsList = topProducts.map((product, index) => `
     <tr>
@@ -281,7 +281,7 @@ export async function sendDailySalesReport({
   `).join('');
 
   const mailOptions = {
-    from: `"Hair Stop Reports" <${process.env.EMAIL_FROM || "noreply@hairstop.ng"}>`,
+    from: `"Hair Stop Reports" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
     to: adminEmails.join(', '),
     subject: `Daily Sales Report - ${date}`,
     html: `

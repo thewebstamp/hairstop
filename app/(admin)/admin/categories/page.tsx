@@ -14,6 +14,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Category {
   id: number;
@@ -127,7 +128,7 @@ export default function CategoriesPage() {
         <div className="flex items-center space-x-2">
           <Link
             href="/admin/categories/new"
-            className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
+            className="inline-flex items-center px-4 py-2 bg-[#800020] text-white rounded-lg hover:bg-[#b76e79]"
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Category
@@ -224,9 +225,11 @@ export default function CategoriesPage() {
               {/* Category Image */}
               <div className="relative h-48 bg-gray-100">
                 {category.image_url ? (
-                  <img
+                  <Image
                     src={category.image_url}
                     alt={category.name}
+                    width={950}
+                    height={1000}
                     className="w-full h-full object-cover"
                   />
                 ) : (

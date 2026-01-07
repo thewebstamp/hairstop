@@ -10,13 +10,12 @@ import {
   Package,
   ChevronLeft,
   ChevronRight,
-  Filter,
   Grid,
   List,
   Star,
-  AlertTriangle,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Product {
   id: number;
@@ -26,7 +25,6 @@ interface Product {
   price: number;
   category_name: string;
   category_slug: string;
-  stock: number;
   featured: boolean;
   images: string[];
   created_at: string;
@@ -46,7 +44,6 @@ export default function ProductsPage() {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [featuredFilter, setFeaturedFilter] = useState('all');
-  const [stockFilter, setStockFilter] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [pagination, setPagination] = useState({
@@ -65,7 +62,6 @@ export default function ProductsPage() {
         ...(search && { search }),
         ...(categoryFilter !== 'all' && { category: categoryFilter }),
         ...(featuredFilter !== 'all' && { featured: featuredFilter }),
-        ...(stockFilter === 'low' && { lowStock: 'true' }),
       });
 
       const response = await fetch(`/api/admin/products?${params}`);
@@ -105,7 +101,7 @@ export default function ProductsPage() {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, [search, categoryFilter, featuredFilter, stockFilter]);
+  }, [search, categoryFilter, featuredFilter]);
 
   const handleDeleteProduct = async (productId: number) => {
     if (!confirm('Are you sure you want to delete this product?')) {
@@ -193,18 +189,6 @@ export default function ProductsPage() {
     }).format(amount);
   };
 
-  const getStockColor = (stock: number) => {
-    if (stock === 0) return 'text-red-600 bg-red-50';
-    if (stock < 10) return 'text-yellow-600 bg-yellow-50';
-    return 'text-green-600 bg-green-50';
-  };
-
-  const getStockLabel = (stock: number) => {
-    if (stock === 0) return 'Out of Stock';
-    if (stock < 10) return 'Low Stock';
-    return 'In Stock';
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -212,7 +196,7 @@ export default function ProductsPage() {
         <div className="flex items-center space-x-2">
           <Link
             href="/admin/products/new"
-            className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
+            className="inline-flex items-center px-4 py-2 bg-[#800020] text-white rounded-lg hover:bg-[#b76e79]"
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Product
@@ -230,18 +214,6 @@ export default function ProductsPage() {
           <div className="text-sm font-medium text-gray-600">Featured</div>
           <div className="text-2xl font-bold text-yellow-600">
             {products.filter(p => p.featured).length}
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm font-medium text-gray-600">Out of Stock</div>
-          <div className="text-2xl font-bold text-red-600">
-            {products.filter(p => p.stock === 0).length}
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm font-medium text-gray-600">Low Stock</div>
-          <div className="text-2xl font-bold text-orange-600">
-            {products.filter(p => p.stock > 0 && p.stock < 10).length}
           </div>
         </div>
       </div>
@@ -282,17 +254,6 @@ export default function ProductsPage() {
               <option value="all">All Products</option>
               <option value="true">Featured Only</option>
               <option value="false">Not Featured</option>
-            </select>
-
-            <select
-              value={stockFilter}
-              onChange={(e) => setStockFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              <option value="all">All Stock</option>
-              <option value="low">Low Stock (&lt;10)</option>
-              <option value="out">Out of Stock</option>
-              <option value="in">In Stock</option>
             </select>
 
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
@@ -371,9 +332,11 @@ export default function ProductsPage() {
               {/* Product Image */}
               <div className="relative aspect-square bg-gray-100">
                 {product.images && product.images.length > 0 ? (
-                  <img
+                  <Image
                     src={product.images[0]}
                     alt={product.name}
+                    width={1080}
+                    height={1080}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -388,17 +351,6 @@ export default function ProductsPage() {
                     <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
                       <Star className="h-3 w-3 mr-1" />
                       Featured
-                    </span>
-                  )}
-                  {product.stock === 0 && (
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800">
-                      Out of Stock
-                    </span>
-                  )}
-                  {product.stock > 0 && product.stock < 10 && (
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-orange-100 text-orange-800">
-                      <AlertTriangle className="h-3 w-3 mr-1" />
-                      Low Stock
                     </span>
                   )}
                 </div>
@@ -437,9 +389,6 @@ export default function ProductsPage() {
 
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">{product.category_name}</span>
-                  <span className={`px-2 py-1 rounded ${getStockColor(product.stock)}`}>
-                    {getStockLabel(product.stock)} ({product.stock})
-                  </span>
                 </div>
 
                 {/* Actions */}
@@ -516,9 +465,6 @@ export default function ProductsPage() {
                   Price
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Stock
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Featured
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -545,11 +491,13 @@ export default function ProductsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
+                      <div className="h-10 w-10 shrink-0">
                         {product.images && product.images.length > 0 ? (
-                          <img
+                          <Image
                             src={product.images[0]}
                             alt={product.name}
+                            width={1080}
+                            height={1080}
                             className="h-10 w-10 rounded object-cover"
                           />
                         ) : (
@@ -574,11 +522,11 @@ export default function ProductsPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {formatCurrency(product.price)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  {/* <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 text-xs rounded-full ${getStockColor(product.stock)}`}>
                       {product.stock} units
                     </span>
-                  </td>
+                  </td> */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
                       onClick={() => toggleFeatured(product.id, product.featured)}

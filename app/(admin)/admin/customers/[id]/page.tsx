@@ -172,7 +172,7 @@ export default function CustomerDetailsPage() {
 
                 <div className="bg-red-50 border-l-4 border-red-400 p-4">
                     <div className="flex">
-                        <div className="flex-shrink-0">
+                        <div className="shrink-0">
                             <XCircle className="h-5 w-5 text-red-400" />
                         </div>
                         <div className="ml-3">
@@ -194,13 +194,12 @@ export default function CustomerDetailsPage() {
                         className="inline-flex items-center text-blue-600 hover:text-blue-800 mr-4"
                     >
                         <ArrowLeft className="h-5 w-5 mr-2" />
-                        Back to Customers
                     </Link>
                     <h1 className="text-2xl font-bold text-gray-900">Customer Details</h1>
                 </div>
 
                 <div className="text-right">
-                    <div className="text-sm text-gray-500">Customer ID</div>
+                    <div className="text-sm text-gray-500">ID</div>
                     <div className="text-lg font-semibold text-gray-900">#{customer.id}</div>
                 </div>
             </div>
@@ -256,12 +255,6 @@ export default function CustomerDetailsPage() {
                                                 </>
                                             )}
                                         </span>
-
-                                        {customer.provider && (
-                                            <span className="text-sm text-gray-600">
-                                                Via {customer.provider}
-                                            </span>
-                                        )}
                                     </div>
                                 </div>
                             </div>

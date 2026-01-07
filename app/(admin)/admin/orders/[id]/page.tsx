@@ -3,13 +3,13 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { 
-  ArrowLeft, 
-  Printer, 
-  Download, 
-  Mail, 
-  Phone, 
-  MapPin, 
+import {
+  ArrowLeft,
+  Printer,
+  Download,
+  Mail,
+  Phone,
+  MapPin,
   Package,
   Truck,
   CheckCircle,
@@ -19,6 +19,7 @@ import {
   Eye
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface OrderItem {
   id: number;
@@ -154,7 +155,7 @@ export default function OrderDetailsPage() {
 
   const fetchOrderDetails = async () => {
     if (!orderId) return;
-    
+
     try {
       setLoading(true);
       console.log('Fetching from URL:', `/api/admin/orders/${orderId}`);
@@ -193,7 +194,7 @@ export default function OrderDetailsPage() {
 
       // Update local state
       setOrder(prev => prev ? { ...prev, status: newStatus } : null);
-      
+
       // Show success message
       alert('Order status updated successfully! Customer will be notified via email.');
     } catch (err) {
@@ -328,16 +329,6 @@ export default function OrderDetailsPage() {
               Placed on {formatDate(order.created_at)}
             </p>
           </div>
-          <div className="flex items-center space-x-3">
-            <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-              <Printer className="h-4 w-4 mr-2" />
-              Print
-            </button>
-            <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </button>
-          </div>
         </div>
       </div>
 
@@ -399,9 +390,11 @@ export default function OrderDetailsPage() {
               {order.items.map((item) => (
                 <div key={item.id} className="p-6 flex items-start">
                   {item.product_image ? (
-                    <img
+                    <Image
                       src={item.product_image}
                       alt={item.product_name}
+                      width={160}
+                      height={160}
                       className="w-16 h-16 object-cover rounded"
                     />
                   ) : (
@@ -472,7 +465,7 @@ export default function OrderDetailsPage() {
                         href={order.payment_proof.file_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark"
+                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#800020] hover:bg-[#b76e79]"
                       >
                         <Eye className="h-4 w-4 mr-2" />
                         View File
@@ -480,9 +473,11 @@ export default function OrderDetailsPage() {
                     </div>
                     <div className="border rounded-lg overflow-hidden">
                       {order.payment_proof.file_type.startsWith('image/') ? (
-                        <img
+                        <Image
                           src={order.payment_proof.file_url}
                           alt="Payment proof"
+                          width={800}
+                          height={800}
                           className="w-full h-auto max-h-96 object-contain"
                         />
                       ) : (

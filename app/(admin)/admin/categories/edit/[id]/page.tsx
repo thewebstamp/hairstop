@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Upload, X, Loader } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Category {
   id: number;
@@ -195,9 +196,11 @@ export default function EditCategoryPage() {
               
               {imagePreview ? (
                 <div className="relative">
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Preview"
+                    width={900}
+                    height={950}
                     className="w-full h-48 object-cover rounded-lg"
                   />
                   <button
@@ -242,7 +245,7 @@ export default function EditCategoryPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>

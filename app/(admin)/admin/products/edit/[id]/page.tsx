@@ -5,6 +5,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Upload, X, Plus, Trash2, AlertCircle, Loader2, Eye } from 'lucide-react';
+import Image from 'next/image';
 
 interface Category {
     id: number;
@@ -908,9 +909,11 @@ export default function EditProductPage() {
                                 {existingImages.map((image, index) => (
                                     <div key={index} className="relative group">
                                         <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                            <img
+                                            <Image
                                                 src={image}
                                                 alt={`Product image ${index + 1}`}
+                                                width={850}
+                                                height={900}
                                                 className="w-full h-full object-cover"
                                             />
                                         </div>
@@ -963,9 +966,11 @@ export default function EditProductPage() {
                                 {newImagePreviews.map((preview, index) => (
                                     <div key={index} className="relative group">
                                         <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                            <img
+                                            <Image
                                                 src={preview}
                                                 alt={`New image ${index + 1}`}
+                                                width={800}
+                                                height={900}
                                                 className="w-full h-full object-cover"
                                             />
                                         </div>
@@ -1191,7 +1196,7 @@ export default function EditProductPage() {
                     <button
                         type="submit"
                         disabled={saving}
-                        className="inline-flex items-center px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50"
+                        className="inline-flex items-center px-6 py-2 bg-black text-white rounded-lg hover:bg-[#b76e79] disabled:opacity-50"
                     >
                         {saving ? (
                             <>

@@ -94,7 +94,7 @@ export default function ChatWidget() {
             console.error('Error:', error);
             const errorMessage: Message = {
                 id: (Date.now() + 1).toString(),
-                content: "I apologize, I'm having trouble connecting right now. Please contact us directly at +234-812-345-6789 or via WhatsApp for immediate assistance.",
+                content: "I apologize, I'm having trouble connecting right now. Please contact us directly at +234-903-698-1564 or via WhatsApp for immediate assistance.",
                 role: 'assistant',
                 timestamp: new Date(),
             };
@@ -234,7 +234,7 @@ export default function ChatWidget() {
                                 </button>
                             </div>
                             <p className="text-xs text-gray-500 text-center mt-2">
-                                Need immediate help? <a href="https://wa.me/2348123456789" target="_blank" className="text-purple-600 font-medium">Chat on WhatsApp</a>
+                                Need immediate help? <a href="https://wa.me/2349036981564" target="_blank" className="text-purple-600 font-medium">Chat on WhatsApp</a>
                             </p>
                         </form>
                     </Dialog.Content>

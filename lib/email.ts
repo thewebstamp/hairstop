@@ -24,7 +24,7 @@ export async function sendWelcomeEmail({
   verificationToken?: string; // Add ? to make it optional
 }) {
   const storeName = "Hair Stop";
-  const storeEmail = "noreply@hairstop.ng";
+  const storeEmail = "hairstopwigsandextentions@gmail.com";
 
   // Create login link
   const loginLink = `${process.env.NEXTAUTH_URL}/auth/login`;
@@ -89,12 +89,12 @@ export async function sendWelcomeEmail({
           <li>Browse and purchase our premium hair products</li>
           <li>Save your favorite items for later</li>
           <li>Track your orders in real-time</li>
-          <li>Write reviews and earn rewards</li>
+          <li>Write reviews</li>
           <li>Get exclusive offers and discounts</li>
         </ul>
         
         <p><strong>Need help?</strong></p>
-        <p>Contact our support team at support@hairstop.ng or reply to this email.</p>
+        <p>Contact our support team at hairstopwigsandextentions@gmail.com</p>
         
         <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
         
@@ -223,7 +223,7 @@ export async function sendOrderConfirmationEmail({
   const orderLink = `${process.env.NEXTAUTH_URL}/orders/${orderId}`;
 
   const mailOptions = {
-    from: `"Hair Stop" <${process.env.EMAIL_FROM || "noreply@hairstop.ng"}>`,
+    from: `"Hair Stop" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
     to,
     subject: `Order Confirmation - #${orderNumber}`,
     html: `
@@ -271,7 +271,7 @@ export async function sendOrderConfirmationEmail({
         <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
         
         <p style="color: #666; font-size: 12px;">
-          Need help? Contact support@hairstop.ng or reply to this email.
+          Need help? hairstopwigsandextentions@gmail.com
         </p>
       </div>
     `,

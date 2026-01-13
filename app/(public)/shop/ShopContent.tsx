@@ -467,6 +467,22 @@ export default function ShopContent({ initialData, searchParams }: ShopContentPr
                                                 >
                                                     {/* Product Image */}
                                                     <div className="relative aspect-square overflow-hidden rounded-t-2xl md:rounded-t-3xl">
+
+                                                        {/* Business Logo Branding - Add this after the product image container opening */}
+                                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                            <div className="relative w-3/4 h-3/4 opacity-[0.17] group-hover:opacity-[0.11] transition-opacity duration-500">
+                                                                <Image
+                                                                    src="/images/logo1.png"
+                                                                    alt="Brand Logo"
+                                                                    fill
+                                                                    className="object-contain"
+                                                                    sizes="(max-width: 640px) 120px, (max-width: 1024px) 140px, 160px"
+                                                                />
+                                                                {/* Optional: Add a subtle glow */}
+                                                                <div className="absolute inset-0 bg-linear-to-br from-[#b76e79]/10 to-transparent blur-sm" />
+                                                            </div>
+                                                        </div>
+
                                                         {product.images && product.images[0] ? (
                                                             <>
                                                                 <Image

@@ -26,10 +26,10 @@ export default async function HomePage() {
                 <div className="absolute inset-0 opacity-[0.03]">
                     <div className="absolute inset-0" style={{
                         backgroundImage: `
-                linear-linear-gradient(45deg, transparent 65%, #b76e79 65%, #b76e79 67%, transparent 67%),
-                linear-linear-gradient(-45deg, transparent 65%, #800020 65%, #800020 67%, transparent 67%),
-                linear-linear-gradient(90deg, transparent 90%, #f5c8c8 90%, #f5c8c8 92%, transparent 92%)
-            `,
+                    linear-linear-gradient(45deg, transparent 65%, #b76e79 65%, #b76e79 67%, transparent 67%),
+                    linear-linear-gradient(-45deg, transparent 65%, #800020 65%, #800020 67%, transparent 67%),
+                    linear-linear-gradient(90deg, transparent 90%, #f5c8c8 90%, #f5c8c8 92%, transparent 92%)
+                `,
                         backgroundSize: '120px 120px, 120px 120px, 60px 60px'
                     }} />
                 </div>
@@ -77,6 +77,22 @@ export default async function HomePage() {
                             >
                                 {/* Product Image Container */}
                                 <div className="relative aspect-square overflow-hidden rounded-t-2xl md:rounded-t-3xl">
+
+                                    {/* Business Logo Branding - Add this after the product image container opening */}
+                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <div className="relative w-2/3 h-2/3 opacity-[0.18] group-hover:opacity-[0.12] transition-opacity duration-500">
+                                            <Image
+                                                src="/images/logo1.png"
+                                                alt="Brand Logo"
+                                                fill
+                                                className="object-contain"
+                                                sizes="(max-width: 640px) 100px, (max-width: 1024px) 120px, 150px"
+                                            />
+                                            {/* Optional: Add a subtle glow */}
+                                            <div className="absolute inset-0 bg-linear-to-br from-[#800020]/10 to-transparent blur-sm" />
+                                        </div>
+                                    </div>
+
                                     {product.images && product.images[0] ? (
                                         <>
                                             <Image

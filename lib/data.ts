@@ -205,7 +205,6 @@ export async function getFeaturedProducts(
       SELECT p.*, c.name as category_name 
       FROM products p
       JOIN categories c ON p.category_id = c.id
-      WHERE p.featured = true 
       ORDER BY p.created_at DESC 
       LIMIT $1
     `,

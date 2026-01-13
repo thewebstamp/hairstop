@@ -57,7 +57,7 @@ export default async function HomePage() {
                         </div>
 
                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                            Featured{' '}
+                            Premium{' '}
                             <span className="text-transparent bg-clip-text bg-linear-to-r from-[#b76e79] via-[#800020] to-[#b76e79]">
                                 Luxury Hair
                             </span>

@@ -38,46 +38,67 @@ export async function sendOrderStatusEmail({
     cancelled: "Your order has been cancelled.",
   };
 
-  const message = statusMessages[newStatus] || `Your order status has been updated to ${newStatus}.`;
+  const message =
+    statusMessages[newStatus] ||
+    `Your order status has been updated to ${newStatus}.`;
 
   const orderLink = `${process.env.NEXTAUTH_URL}/orders/${orderId}`;
-  
+
   const mailOptions = {
     from: `"Hair Stop" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
     to,
     subject: `Order Update - #${orderNumber}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #8B5A2B;">Order Status Updated</h2>
-        
-        <p>Hello ${name},</p>
-        
-        <p>The status of your order <strong>#${orderNumber}</strong> has been updated:</p>
-        
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <p><strong>Previous Status:</strong> ${oldStatus}</p>
-          <p><strong>New Status:</strong> ${newStatus}</p>
-          <p><strong>Update:</strong> ${message}</p>
-          ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ''}
-        </div>
-        
-        <p>You can view your order details anytime:</p>
-        <div style="text-align: center; margin: 20px 0;">
-          <a href="${orderLink}" 
-             style="background-color: #8B5A2B; color: white; padding: 12px 24px; 
-                    text-decoration: none; border-radius: 4px; font-weight: bold;">
-            View Order Details
-          </a>
-        </div>
-        
-        <p>If you have any questions about this update, please contact our support team.</p>
-        
-        <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
-        
-        <p style="color: #666; font-size: 12px;">
-          This is an automated message. Please do not reply to this email.
-        </p>
-      </div>
+  <h2 style="color: #8B5A2B;">Order Status Updated</h2>
+  
+  <p>Hello ${name},</p>
+  
+  <p>The status of your order <strong>#${orderNumber}</strong> has been updated:</p>
+  
+  <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <p><strong>Previous Status:</strong> ${oldStatus}</p>
+    <p><strong>New Status:</strong> ${newStatus}</p>
+    <p><strong>Update:</strong> ${message}</p>
+    ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ""}
+  </div>
+  
+  <p>You can view your order details anytime:</p>
+  <div style="text-align: center; margin: 20px 0;">
+    <a href="${orderLink}" 
+       style="background-color: #8B5A2B; color: white; padding: 12px 24px; 
+              text-decoration: none; border-radius: 4px; font-weight: bold;">
+      View Order Details
+    </a>
+  </div>
+  
+  <!-- Wig Service Call-to-Action -->
+  <div style="margin: 25px 0; padding: 20px; background: linear-gradient(to right, #fef8f0, #faf3e9); border-radius: 8px; text-align: center;">
+    <p style="margin: 0 0 12px 0; font-weight: bold; color: #8B5A2B;">
+      ✨ Professional Wig Making Available
+    </p>
+    <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">
+      Let our specialists transform your hair into a custom-fit wig. Perfect styling guaranteed.
+    </p>
+    <a href="https://wa.me/2349036981564?text=Hello%20HairStop!%20I'm%20interested%20in%20wig-making%20for%20order%20${orderNumber}"
+       style="background-color: #8B5A2B; color: white; padding: 10px 18px; 
+              text-decoration: none; border-radius: 4px; font-weight: bold; 
+              font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
+      <span>💬 Contact Wig Specialist</span>
+    </a>
+    <p style="margin: 8px 0 0 0; color: #888; font-size: 12px;">
+      WhatsApp: +234 903 698 1564
+    </p>
+  </div>
+  
+  <p>If you have any questions about this update, please contact our support team.</p>
+  
+  <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
+  
+  <p style="color: #666; font-size: 12px;">
+    This is an automated message. Please do not reply to this email.
+  </p>
+</div>
     `,
   };
 
@@ -110,11 +131,11 @@ export async function sendAdminNotificationEmail({
   customerName: string;
   newStatus?: string;
 }) {
-  const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS 
-    ? process.env.ADMIN_NOTIFICATION_EMAILS.split(',') 
-    : [process.env.ADMIN_EMAIL || 'hairstopwigsandextentions@gmail.com'];
+  const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS
+    ? process.env.ADMIN_NOTIFICATION_EMAILS.split(",")
+    : [process.env.ADMIN_EMAIL || "hairstopwigsandextentions@gmail.com"];
 
-  const subject = newStatus 
+  const subject = newStatus
     ? `Order #${orderNumber} Status Updated to ${newStatus}`
     : `New Order Received - #${orderNumber}`;
 
@@ -123,10 +144,10 @@ export async function sendAdminNotificationEmail({
     : `A new order #${orderNumber} has been placed by ${customerName}.`;
 
   const adminOrderLink = `${process.env.NEXTAUTH_URL}/admin/orders/${orderId}`;
-  
+
   const mailOptions = {
     from: `"Hair Stop Admin" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
-    to: adminEmails.join(', '),
+    to: adminEmails.join(", "),
     subject,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -137,7 +158,7 @@ export async function sendAdminNotificationEmail({
         <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <p><strong>Order Number:</strong> ${orderNumber}</p>
           <p><strong>Customer:</strong> ${customerName}</p>
-          ${newStatus ? `<p><strong>New Status:</strong> ${newStatus}</p>` : ''}
+          ${newStatus ? `<p><strong>New Status:</strong> ${newStatus}</p>` : ""}
         </div>
         
         <div style="text-align: center; margin: 20px 0;">
@@ -178,25 +199,29 @@ export async function sendAdminNotificationEmail({
 // Send low stock alert to admin
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function sendLowStockAlert(products: any[]) {
-  const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS 
-    ? process.env.ADMIN_NOTIFICATION_EMAILS.split(',') 
-    : [process.env.ADMIN_EMAIL || 'hairstopwigsandextentions@gmail.com'];
+  const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS
+    ? process.env.ADMIN_NOTIFICATION_EMAILS.split(",")
+    : [process.env.ADMIN_EMAIL || "hairstopwigsandextentions@gmail.com"];
 
   if (products.length === 0) return;
 
-  const productList = products.map(product => `
+  const productList = products
+    .map(
+      (product) => `
     <tr>
       <td style="padding: 8px; border: 1px solid #ddd;">${product.name}</td>
       <td style="padding: 8px; border: 1px solid #ddd;">${product.category_name}</td>
       <td style="padding: 8px; border: 1px solid #ddd;">${product.stock}</td>
       <td style="padding: 8px; border: 1px solid #ddd;">₦${product.price.toLocaleString()}</td>
     </tr>
-  `).join('');
+  `
+    )
+    .join("");
 
   const mailOptions = {
     from: `"Hair Stop Inventory" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
-    to: adminEmails.join(', '),
-    subject: `Low Stock Alert - ${products.length} Product${products.length > 1 ? 's' : ''}`,
+    to: adminEmails.join(", "),
+    subject: `Low Stock Alert - ${products.length} Product${products.length > 1 ? "s" : ""}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #8B5A2B;">Low Stock Alert ⚠️</h2>
@@ -241,8 +266,8 @@ export async function sendLowStockAlert(products: any[]) {
       return await adminTransporter.sendMail(mailOptions);
     } else {
       console.log("Low stock alert (development):", {
-        products: products.map(p => p.name),
-        stock: products.map(p => p.stock),
+        products: products.map((p) => p.name),
+        stock: products.map((p) => p.stock),
       });
       return { message: "Low stock alert logged in development" };
     }
@@ -267,22 +292,26 @@ export async function sendDailySalesReport({
   topProducts: any[];
   newCustomers: number;
 }) {
-  const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS 
-    ? process.env.ADMIN_NOTIFICATION_EMAILS.split(',') 
-    : [process.env.ADMIN_EMAIL || 'hairstopwigsandextentions@gmail.com'];
+  const adminEmails = process.env.ADMIN_NOTIFICATION_EMAILS
+    ? process.env.ADMIN_NOTIFICATION_EMAILS.split(",")
+    : [process.env.ADMIN_EMAIL || "hairstopwigsandextentions@gmail.com"];
 
-  const topProductsList = topProducts.map((product, index) => `
+  const topProductsList = topProducts
+    .map(
+      (product, index) => `
     <tr>
       <td style="padding: 8px; border: 1px solid #ddd;">${index + 1}</td>
       <td style="padding: 8px; border: 1px solid #ddd;">${product.name}</td>
       <td style="padding: 8px; border: 1px solid #ddd;">${product.quantity_sold}</td>
       <td style="padding: 8px; border: 1px solid #ddd;">₦${product.revenue.toLocaleString()}</td>
     </tr>
-  `).join('');
+  `
+    )
+    .join("");
 
   const mailOptions = {
     from: `"Hair Stop Reports" <${process.env.EMAIL_FROM || "hairstopwigsandextentions@gmail.com"}>`,
-    to: adminEmails.join(', '),
+    to: adminEmails.join(", "),
     subject: `Daily Sales Report - ${date}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

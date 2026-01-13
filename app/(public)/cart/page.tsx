@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { getCartItems, removeFromCart, updateCartQuantity } from '@/lib/cart-actions';
-import { Trash2, Plus, Minus, ShoppingBag, Truck, CreditCard, ArrowRight, Package, Star } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, Truck, CreditCard, ArrowRight, Package, Star, Crown } from 'lucide-react';
 
 export default function CartPage() {
   const { data: session, status } = useSession();
@@ -247,6 +247,57 @@ export default function CartPage() {
             <div className="text-right">
               <div className="text-sm font-medium text-gray-600">Items</div>
               <div className="text-xl font-bold text-gray-900">{cartItems.length}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-8 md:mb-12">
+          <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-[#faf9f6] via-white to-[#f7e7ce]/50 border border-[#e6d0c6]/50 p-6 md:p-8">
+            {/* Background pattern */}
+            <div className="absolute inset-0 opacity-[0.03]">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: 'url(/images/logo1.png)',
+                  backgroundRepeat: 'repeat',
+                  backgroundSize: '100px 100px',
+                  backgroundPosition: 'center',
+                }}
+              />
+            </div>
+
+            {/* Gold accent border */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-[#d4af37] to-transparent" />
+
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-0.5 bg-linear-to-b from-[#800020] via-[#b76e79] to-[#800020] rounded-full" />
+                  <Star className="h-5 w-5 text-[#d4af37]" />
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-[#111827]">
+                  Your Exclusive Masterpiece Awaits
+                </h3>
+              </div>
+
+              <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                Each hair in your cart is not merely purchased—it is <span className="font-semibold text-[#800020]">commissioned</span>.
+                Upon your order, international artisans begin weaving your unique piece with undivided attention and care.
+                This is not mass production; this is <span className="font-semibold text-[#111827]">one-of-one wearable art</span> crafted exclusively for you.
+                The wait is not a delay—it is the <span className="font-semibold text-[#800020]">ritual of luxury</span>, ensuring perfection in every strand.
+              </p>
+
+              {/* Small decorative footer */}
+              <div className="flex items-center justify-between mt-6 pt-4 border-t border-[#e6d0c6]/30">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-linear-to-r from-[#800020] to-[#b76e79] animate-pulse" />
+                  <span className="text-sm font-medium text-gray-600">Made-to-Order Excellence</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-gray-500 font-medium">Luxury Defined</span>
+                  <Crown className="h-3 w-3 text-[#d4af37]" />
+                </div>
+              </div>
             </div>
           </div>
         </div>

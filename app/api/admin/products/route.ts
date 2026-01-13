@@ -646,7 +646,7 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE: Delete product
+// app/api/admin/products/route.ts - DELETE handler
 export async function DELETE(request: NextRequest) {
   try {
     // Verify admin access
@@ -661,11 +661,27 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const { productId } = await request.json();
+    const body = await request.json();
+    const { productId, productIds } = body; // Support both single and bulk
 
-    if (!productId) {
+    let productIdsToDelete: number[] = [];
+
+    if (productIds && Array.isArray(productIds)) {
+      // Bulk delete
+      productIdsToDelete = productIds;
+    } else if (productId) {
+      // Single delete
+      productIdsToDelete = [productId];
+    } else {
       return NextResponse.json(
-        { error: "Product ID is required" },
+        { error: "Product ID(s) required" },
+        { status: 400 }
+      );
+    }
+
+    if (productIdsToDelete.length === 0) {
+      return NextResponse.json(
+        { error: "No products to delete" },
         { status: 400 }
       );
     }
@@ -675,70 +691,72 @@ export async function DELETE(request: NextRequest) {
     try {
       await client.query("BEGIN");
 
-      // Check if product exists
-      const productCheck = await client.query(
-        "SELECT * FROM products WHERE id = $1",
-        [productId]
-      );
+      const deletedProducts: number[] = [];
+      const softDeletedProducts: number[] = [];
 
-      if (productCheck.rows.length === 0) {
-        return NextResponse.json(
-          { error: "Product not found" },
-          { status: 404 }
-        );
-      }
-
-      // Check if product has orders
-      const orderCheck = await client.query(
-        "SELECT 1 FROM order_items WHERE product_id = $1 LIMIT 1",
-        [productId]
-      );
-
-      if (orderCheck.rows.length > 0) {
-        // Soft delete - mark as inactive instead
-        await client.query(
-          "UPDATE products SET stock = 0, featured = false WHERE id = $1",
-          [productId]
+      for (const pid of productIdsToDelete) {
+        // Check if product exists
+        const productCheck = await client.query(
+          "SELECT * FROM products WHERE id = $1",
+          [pid]
         );
 
-        await client.query("COMMIT");
+        if (productCheck.rows.length === 0) {
+          continue; // Skip if product doesn't exist
+        }
 
-        return NextResponse.json({
-          success: true,
-          message:
-            "Product has existing orders. Stock set to 0 and removed from featured.",
-        });
+        // Check if product has orders
+        const orderCheck = await client.query(
+          "SELECT 1 FROM order_items WHERE product_id = $1 LIMIT 1",
+          [pid]
+        );
+
+        if (orderCheck.rows.length > 0) {
+          // Soft delete - mark as inactive
+          await client.query(
+            "UPDATE products SET stock = 0, featured = false, active = false WHERE id = $1",
+            [pid]
+          );
+          softDeletedProducts.push(pid);
+        } else {
+          // Hard delete - product has no orders
+          await client.query(
+            "DELETE FROM product_variants WHERE product_id = $1",
+            [pid]
+          );
+          await client.query("DELETE FROM reviews WHERE product_id = $1", [
+            pid,
+          ]);
+          await client.query("DELETE FROM products WHERE id = $1", [pid]);
+          deletedProducts.push(pid);
+        }
       }
-
-      // Hard delete - product has no orders
-      await client.query("DELETE FROM product_variants WHERE product_id = $1", [
-        productId,
-      ]);
-      await client.query("DELETE FROM reviews WHERE product_id = $1", [
-        productId,
-      ]);
-      await client.query("DELETE FROM products WHERE id = $1", [productId]);
 
       await client.query("COMMIT");
 
       return NextResponse.json({
         success: true,
-        message: "Product deleted successfully",
+        message: "Products deleted successfully",
+        data: {
+          deleted: deletedProducts,
+          softDeleted: softDeletedProducts,
+          total: productIdsToDelete.length,
+        },
       });
     } catch (error) {
       await client.query("ROLLBACK");
-      console.error("Error deleting product:", error);
+      console.error("Error deleting products:", error);
       return NextResponse.json(
-        { error: "Failed to delete product" },
+        { error: "Failed to delete products" },
         { status: 500 }
       );
     } finally {
       client.release();
     }
   } catch (error) {
-    console.error("Error deleting product:", error);
+    console.error("Error in delete handler:", error);
     return NextResponse.json(
-      { error: "Failed to delete product" },
+      { error: "Failed to process request" },
       { status: 500 }
     );
   }

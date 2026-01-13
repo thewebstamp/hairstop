@@ -596,7 +596,7 @@ export default function AddProductPage() {
               />
               <label
                 htmlFor="image-upload"
-                className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark cursor-pointer"
+                className="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-primary-dark cursor-pointer"
               >
                 Select Images
               </label>

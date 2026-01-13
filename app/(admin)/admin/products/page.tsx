@@ -56,6 +56,7 @@ export default function ProductsPage() {
   const fetchProducts = async (page = 1) => {
     try {
       setLoading(true);
+      setError('');
       const params = new URLSearchParams({
         page: page.toString(),
         limit: '12',
@@ -65,12 +66,13 @@ export default function ProductsPage() {
       });
 
       const response = await fetch(`/api/admin/products?${params}`);
-      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch products');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to fetch products`);
       }
 
+      const data = await response.json();
       setProducts(data.products || []);
       setPagination(data.pagination || {
         page: 1,
@@ -79,7 +81,9 @@ export default function ProductsPage() {
         totalPages: 0,
       });
     } catch (err) {
+      console.error('Error fetching products:', err);
       setError(err instanceof Error ? err.message : 'Failed to load products');
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -121,8 +125,19 @@ export default function ProductsPage() {
         throw new Error(data.error || 'Failed to delete product');
       }
 
+      // Show success message
+      alert(data.message || 'Product deleted successfully');
+
       // Remove product from state
       setProducts(products.filter(p => p.id !== productId));
+      // Also remove from selected products if it was selected
+      setSelectedProducts(selectedProducts.filter(id => id !== productId));
+
+      // Update pagination total
+      setPagination(prev => ({
+        ...prev,
+        total: prev.total - 1
+      }));
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Failed to delete product');
     }
@@ -134,24 +149,47 @@ export default function ProductsPage() {
       return;
     }
 
-    if (!confirm(`Delete ${selectedProducts.length} product(s)? This action cannot be undone.`)) {
+    const message = selectedProducts.length === 1
+      ? 'Delete this product? This action cannot be undone.'
+      : `Delete ${selectedProducts.length} products? This action cannot be undone.`;
+
+    if (!confirm(message)) {
       return;
     }
 
     try {
-      const deletions = selectedProducts.map(productId =>
-        fetch('/api/admin/products', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ productId }),
-        })
-      );
+      const response = await fetch('/api/admin/products', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productIds: selectedProducts }),
+      });
 
-      await Promise.all(deletions);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete products');
+      }
+
+      // Show success message with details
+      let successMessage = data.message;
+      if (data.data) {
+        if (data.data.softDeleted && data.data.softDeleted.length > 0) {
+          successMessage += ` ${data.data.softDeleted.length} product(s) were soft-deleted (stock set to 0) because they have existing orders.`;
+        }
+        if (data.data.deleted && data.data.deleted.length > 0) {
+          successMessage += ` ${data.data.deleted.length} product(s) were permanently deleted.`;
+        }
+      }
+      alert(successMessage);
+
+      // Clear selection
       setSelectedProducts([]);
+
+      // Refresh the product list
       fetchProducts(pagination.page);
+
     } catch (err) {
-      alert('Failed to delete products');
+      alert(err instanceof Error ? err.message : 'Failed to delete products');
     }
   };
 
@@ -397,8 +435,8 @@ export default function ProductsPage() {
                     <button
                       onClick={() => toggleFeatured(product.id, product.featured)}
                       className={`p-1 rounded ${product.featured
-                          ? 'text-yellow-600 hover:text-yellow-800'
-                          : 'text-gray-400 hover:text-gray-600'
+                        ? 'text-yellow-600 hover:text-yellow-800'
+                        : 'text-gray-400 hover:text-gray-600'
                         }`}
                       title={product.featured ? 'Remove from featured' : 'Add to featured'}
                     >
@@ -531,8 +569,8 @@ export default function ProductsPage() {
                     <button
                       onClick={() => toggleFeatured(product.id, product.featured)}
                       className={`p-1 rounded ${product.featured
-                          ? 'text-yellow-600 hover:text-yellow-800'
-                          : 'text-gray-400 hover:text-gray-600'
+                        ? 'text-yellow-600 hover:text-yellow-800'
+                        : 'text-gray-400 hover:text-gray-600'
                         }`}
                     >
                       <Star className="h-5 w-5" />
@@ -604,8 +642,8 @@ export default function ProductsPage() {
                   key={pageNum}
                   onClick={() => fetchProducts(pageNum)}
                   className={`px-3 py-1 text-sm font-medium rounded-md ${pagination.page === pageNum
-                      ? 'bg-primary text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-primary text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
                     }`}
                 >
                   {pageNum}

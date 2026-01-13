@@ -2,46 +2,45 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Sparkles, Truck, Crown, Heart, Flower2, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles, Heart, Flower2, Scissors, Globe, Clock } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const announcements = [
   {
     id: 1,
-    title: 'Premium Quality',
-    description: '100% authentic human hair with lifetime quality guarantee',
-    icon: <Star className="text-[#800020]" />,
-    gradient: 'from-[#f7e7ce]/95 via-[#faf9f6]/90 to-[#f5c8c8]/85',
+    title: 'Artisan Crafted',
+    description: 'Each hair weaved meticulously upon order - a unique piece of wearable art',
+    icon: <Scissors className="text-[#800020]" />,
+    gradient: 'from-[#f7e7ce]/95 via-[#f5c8c8]/80 to-[#f7e7ce]/90',
     textColor: 'text-[#800020]',
     accentColor: '#b76e79',
     pattern: 'diamond',
     link: '/shop',
-    feature: 'Verified & Tested'
+    feature: 'Made-to-Order'
   },
   {
     id: 2,
-    title: 'Free Luxury Shipping',
-    description: 'Complimentary shipping on orders over ₦1,000,000',
-    icon: <Truck className="text-[#800020]" />,
-    gradient: 'from-[#f5c8c8]/95 via-[#faf9f6]/90 to-[#f7e7ce]/85',
+    title: 'Globally Curated',
+    description: 'Imported premium hairs, foreign-processed for luxury quality standards and feel',
+    icon: <Globe className="text-[#800020]" />,
+    gradient: 'from-[#f7e7ce]/95 via-[#f5c8c8]/80 to-[#f7e7ce]/90',
     textColor: 'text-[#800020]',
     accentColor: '#b76e79',
     pattern: 'dots',
     link: '/shop',
-    feature: 'Worldwide'
+    feature: 'International'
   },
   {
     id: 3,
-    title: 'Luxury Experience',
-    description: 'Premium packaging with personalized styling consultation',
-    icon: <Crown className="text-[#800020]" />,
+    title: 'Worth the Wait',
+    description: 'Patiently crafted perfection - each order receives undivided artisan attention',
+    icon: <Clock className="text-[#800020]" />,
     gradient: 'from-[#f7e7ce]/95 via-[#f5c8c8]/80 to-[#f7e7ce]/90',
     textColor: 'text-[#800020]',
     accentColor: '#b76e79',
-    pattern: 'waves',
+    pattern: 'floral',
     link: '/shop',
-    feature: '5★ Service'
+    feature: 'Patience Rewarded'
   }
 ];
 
@@ -53,7 +52,7 @@ export default function BillboardSection() {
     if (!isHovered) {
       const interval = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % announcements.length);
-      }, 5000);
+      }, 10000);
       return () => clearInterval(interval);
     }
   }, [isHovered]);
@@ -101,14 +100,16 @@ export default function BillboardSection() {
           <div className="relative overflow-hidden rounded-3xl md:rounded-4xl shadow-2xl shadow-[#b76e79]/5">
             {/* Background Image Layer */}
             <div className="absolute inset-0 z-0">
-              <Image
-                src="/images/logo1.png"
-                alt="Luxury hair collection background"
-                fill
-                className="object-cover object-center opacity-100"
-                sizes="100vw"
+              {/* Pattern background with repeated logo */}
+              <div
+                className="absolute inset-0 opacity-30"
+                style={{
+                  backgroundImage: 'url(/images/logo1.png)',
+                  backgroundRepeat: 'repeat',
+                  backgroundSize: '110px 110px',
+                  backgroundPosition: 'center'
+                }}
               />
-              <div className="absolute inset-0 bg-linear-to-br from-white/50 via-transparent to-[#f7e7ce]/30" />
             </div>
 
             {/* Animated Slides */}

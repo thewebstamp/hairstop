@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Category, Product } from '@/lib/data';
 import { Filter, X, Star, Sparkles, Eye } from 'lucide-react';
+import CraftsmanshipBanner from './CraftsmanshipBanner';
 
 interface ShopContentProps {
     initialData: {
@@ -63,6 +64,8 @@ export default function ShopContent({ initialData, searchParams }: ShopContentPr
 
     return (
         <>
+            <CraftsmanshipBanner />
+
             {/* Mobile Filter Button - Fixed at Bottom Right */}
             <div className="fixed bottom-6 left-4 z-40 lg:hidden">
                 <button

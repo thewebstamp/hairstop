@@ -98,8 +98,8 @@ const CraftsmanshipHeader = () => {
               className="text-xl md:text-2xl text-gray-800 max-w-2xl mx-auto font-medium leading-relaxed relative"
             >
               <span className="absolute -left-6 top-1/2 transform -translate-y-1/2 h-1 w-4 bg-linear-to-r from-[#d4af37] to-[#f4d03f] rounded-full" />
-              Each piece is commissioned upon order by international artisans.
-              <span className="text-[#111827] font-semibold"> The peak of luxury hairs in perfection.</span>
+              Each piece is commissioned upon order by international artisans, representing
+              <span className="text-[#111827] font-semibold"> the peak of luxury and perfection.</span>
               <span className="absolute -right-6 top-1/2 transform -translate-y-1/2 h-1 w-4 bg-linear-to-l from-[#d4af37] to-[#f4d03f] rounded-full" />
             </motion.p>
           </div>
